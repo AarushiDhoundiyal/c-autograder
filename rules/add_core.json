@@ -1,0 +1,21 @@
+{
+  "problem": "add_two_integers",
+  "description": "Five-metric rule set (the Week 1-2 scope). Weights sum to 1.00.",
+  "time_limit_s": 1,
+  "memory_limit_mb": 64,
+  "skipped_policy": "zero",
+  "smoke_input": "7 5\n",
+  "metrics": [
+    {"name": "correctness", "analyzer": "io_tests", "weight": 0.35,
+     "params": {"testset_dir": "problems/add/tests", "compare": "tokens"}},
+    {"name": "syntax", "analyzer": "compiler_warnings", "weight": 0.15,
+     "params": {"flags": "-Wall -Wextra -std=c11", "penalty_per_warning": 0.1}},
+    {"name": "structure", "analyzer": "static_analysis", "weight": 0.15,
+     "params": {"max_cyclomatic": 8, "max_function_length": 40}},
+    {"name": "modularity", "analyzer": "function_split", "weight": 0.15,
+     "params": {"expect_helpers": true, "min_functions": 2}},
+    {"name": "memory_safety", "analyzer": "sanitizer_run", "weight": 0.20,
+     "params": {"testset_dir": "problems/add/tests",
+                "flags": "-fsanitize=address,undefined -g -O0"}}
+  ]
+}

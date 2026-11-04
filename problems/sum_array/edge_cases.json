@@ -1,0 +1,14 @@
+{
+  "description": "Corner cases for sum_array. Expected outputs come from reference.c, never from an LLM.",
+  "groups": {
+    "empty": ["0\n", "0"],
+    "single": ["1\n5\n", "1\n-5\n", "1\n2147483647\n", "1\n-2147483648\n"],
+    "negatives": ["3\n-1 -2 -3\n", "4\n-5 5 -5 5\n", "2\n-2147483648 -2147483648\n"],
+    "int_overflow": ["2\n2147483647 1\n", "3\n2147483647 2147483647 2147483647\n", "2\n-2147483648 -1\n"],
+    "whitespace": ["3\n  1   2\t3  \n", "3 1 2 3\n", "3\n1\n2\n3\n"],
+    "crlf": ["3\r\n1 2 3\r\n"],
+    "no_trailing_newline": ["3\n1 2 3"],
+    "last_element": ["2\n0 9\n", "5\n0 0 0 0 7\n"]
+  },
+  "random": {"generator": "int_list", "count": 20}
+}

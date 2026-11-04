@@ -1,0 +1,15 @@
+{
+  "description": "Corner cases for add_two_integers. Expected outputs come from reference.c, never from an LLM.",
+  "groups": {
+    "negatives": ["-3 -4\n", "-10 10\n", "-1 -1\n", "-2147483648 0\n", "5 -9\n"],
+    "zero": ["0 0\n", "0 5\n", "-7 0\n"],
+    "int_overflow": ["2147483647 1\n", "-2147483648 -1\n", "2147483647 2147483647\n",
+                     "-2147483648 -2147483648\n", "2147483647 -2147483648\n"],
+    "whitespace": ["  7   5  \n", "7\t5\n", "7\n5\n", "\n7 5\n"],
+    "crlf": ["7 5\r\n", "-3 -4\r\n"],
+    "no_trailing_newline": ["7 5", "2147483647 1"],
+    "leading_zeros": ["007 003\n", "000 000\n"],
+    "plus_sign": ["+5 +3\n", "+2147483647 +1\n"]
+  },
+  "random": {"generator": "two_ints", "count": 20}
+}

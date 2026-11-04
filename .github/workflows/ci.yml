@@ -1,0 +1,21 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: System tools
+        run: sudo apt-get update && sudo apt-get install -y gcc cppcheck valgrind
+      - name: Python packages
+        run: pip install -r requirements.txt
+      - name: Unit tests (sandbox, rules, analyzers, Django)
+        run: python -m pytest -q tests
+      - name: Reproducibility (10 identical runs per sample, all nine metrics)
+        run: python scripts/repro_check.py --runs 10 samples/add_basic.c samples/add_loop.c samples/add_broken.c
+      - name: Sample outputs
+        run: python scripts/run_samples.py
+      - uses: actions/upload-artifact@v4
+        with: {name: sample-reports, path: reports/final}

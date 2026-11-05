@@ -1,0 +1,27 @@
+{
+  "description": "Corner cases for permutations. Smallest inputs, order-sensitive sizes and array limits. Expected outputs come from reference.c, never from an LLM.",
+  "groups": {
+    "smallest": [
+      "1\n",
+      "2\n"
+    ],
+    "order": [
+      "3\n",
+      "4\n"
+    ],
+    "beyond_six": [
+      "7\n",
+      "8\n"
+    ],
+    "whitespace": [
+      "  3\n",
+      "\n\n4 \n"
+    ],
+    "crlf": [
+      "5\r\n"
+    ],
+    "no_trailing_newline": [
+      "3"
+    ]
+  }
+}

@@ -1,0 +1,104 @@
+[
+  {
+    "title": "sample",
+    "category": "normal",
+    "stdin": "aaabbccccdd\n",
+    "expected_output": "4\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "streak near start",
+    "category": "normal",
+    "stdin": "bbbbcdddee\n",
+    "expected_output": "4\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "streak near end",
+    "category": "normal",
+    "stdin": "aaabccccccc\n",
+    "expected_output": "7\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "several runs",
+    "category": "normal",
+    "stdin": "mmnnnzzzzaaa\n",
+    "expected_output": "4\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "many alternating",
+    "category": "normal",
+    "stdin": "abababababababababababababababababababababababababababababababababababababababab\n",
+    "expected_output": "1\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "long random word",
+    "category": "normal",
+    "stdin": "dadaaaeeaaaabadabecadaeddcaccaaaecbccceaeeeaacebaaaadcacabcaacdaaedaaaacccacaacacbcbceedeecaabaadedaebaadcddaadaaadaeacadaddadacedddbbaeebabcaeebcbaacddaadadbabaabbacdebdedaedbeaabaaedabbdaebaeebdcbaa\n",
+    "expected_output": "4\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "single character",
+    "category": "edge",
+    "stdin": "a\n",
+    "expected_output": "1\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "single_character"
+  },
+  {
+    "title": "all equal",
+    "category": "edge",
+    "stdin": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq\n",
+    "expected_output": "40\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "all_equal"
+  },
+  {
+    "title": "all distinct",
+    "category": "edge",
+    "stdin": "abcdefghijklmnopqrstuvwxyz\n",
+    "expected_output": "1\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "all_distinct"
+  },
+  {
+    "title": "long streak at beginning",
+    "category": "edge",
+    "stdin": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyz\n",
+    "expected_output": "80\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "long_run_at_start"
+  },
+  {
+    "title": "long streak at end",
+    "category": "edge",
+    "stdin": "aabzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\n",
+    "expected_output": "100\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "long_run_at_end"
+  },
+  {
+    "title": "maximum length",
+    "category": "edge",
+    "stdin": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\n",
+    "expected_output": "1000\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "maximum_length"
+  }
+]

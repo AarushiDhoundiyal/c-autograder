@@ -1,0 +1,385 @@
+{
+  "submission": "count_occurrences_05_heap_out_of_bounds_bug.c",
+  "submission_hash": "sha256:8146c020892c82b9b05efd3ff7c1ee8c2c99391bccfeadbb354fcee7fb2eda4c",
+  "rules_hash": "sha256:604cbfd74f709d32871a064ac68b82ee3352021c53fbcd16b56a1f3ed5c95c40",
+  "problem": "count_occurrences",
+  "grade": 85.41,
+  "partial": false,
+  "first_pass": {
+    "compiled": true,
+    "compile_warnings": 0,
+    "compile_errors": [],
+    "smoke_ok": true,
+    "smoke_outcome": "OK",
+    "suspected_infinite_loop": false,
+    "static_sanity": {
+      "has_main": true,
+      "has_reader": true,
+      "has_writer": true,
+      "main_returns": true,
+      "ok": true
+    },
+    "notes": [],
+    "parser": "tree-sitter",
+    "isolation": {
+      "private_empty_cwd": true,
+      "privilege_drop": false
+    }
+  },
+  "metrics": [
+    {
+      "name": "correctness",
+      "analyzer": "io_tests",
+      "status": "ok",
+      "score": 0.8333,
+      "weight": 0.27,
+      "contribution": 22.5,
+      "evidence": {
+        "tests_passed": 10,
+        "tests_total": 12,
+        "failing_tests": [
+          "003",
+          "008"
+        ],
+        "failing": [
+          {
+            "test": "003",
+            "input": "4 0\n9 8 7 6",
+            "expected": "0",
+            "got": "1",
+            "note": "wrong output",
+            "why": "The output differs from the expected output. Look for a wrong formula, an off-by-one error or a formatting difference (extra text, missing newline).",
+            "kind": "wrong_output"
+          },
+          {
+            "test": "008",
+            "input": "1 0\n1",
+            "expected": "0",
+            "got": "1",
+            "note": "wrong output",
+            "why": "The output differs from the expected output. Look for a wrong formula, an off-by-one error or a formatting difference (extra text, missing newline).",
+            "kind": "wrong_output"
+          }
+        ]
+      },
+      "feedback": "10/12 tests pass; first failure: test 003 (wrong output)",
+      "suggestions": [
+        "Run the failing input by hand and compare your output with the expected output."
+      ]
+    },
+    {
+      "name": "syntax",
+      "analyzer": "compiler_warnings",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.08,
+      "contribution": 8.0,
+      "evidence": {
+        "compiled": true,
+        "flags": "-Wall -Wextra -std=c11 -O2",
+        "werror_removed": false,
+        "added_O2": true,
+        "warnings": 0,
+        "by_flag": {},
+        "first_warnings": []
+      },
+      "feedback": "no warnings",
+      "suggestions": []
+    },
+    {
+      "name": "structure",
+      "analyzer": "static_analysis",
+      "status": "ok",
+      "score": 0.65,
+      "weight": 0.08,
+      "contribution": 5.2,
+      "evidence": {
+        "measured_with": "lizard",
+        "functions": [
+          {
+            "name": "main",
+            "cyclomatic": 9,
+            "length": 11
+          }
+        ],
+        "limits": {
+          "max_cyclomatic": 8,
+          "max_function_length": 80
+        },
+        "cppcheck": []
+      },
+      "feedback": "1 function(s), max cyclomatic 9, 0 cppcheck finding(s)",
+      "suggestions": [
+        "Split main(): cyclomatic complexity 9 exceeds 8."
+      ]
+    },
+    {
+      "name": "modularity",
+      "analyzer": "function_split",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.08,
+      "contribution": 8.0,
+      "evidence": {
+        "functions_defined": 1,
+        "function_names": [
+          "main"
+        ],
+        "helpers_defined": 0,
+        "helpers_called": [],
+        "expected_helpers": 1
+      },
+      "feedback": "helpers not required",
+      "suggestions": []
+    },
+    {
+      "name": "logical",
+      "analyzer": "edge_case_runner",
+      "status": "ok",
+      "score": 0.8333,
+      "weight": 0.15,
+      "contribution": 12.5,
+      "evidence": {
+        "cases_passed": 5,
+        "cases_total": 6,
+        "groups": {
+          "single_element": {
+            "passed": 1,
+            "total": 1
+          },
+          "no_matches": {
+            "passed": 0,
+            "total": 1
+          },
+          "negative_values": {
+            "passed": 1,
+            "total": 1
+          },
+          "zero_values": {
+            "passed": 1,
+            "total": 1
+          },
+          "extreme_values": {
+            "passed": 1,
+            "total": 1
+          },
+          "maximum_length": {
+            "passed": 1,
+            "total": 1
+          }
+        },
+        "invalid_cases": 0,
+        "counter_tests_found": 1,
+        "failing": [
+          {
+            "test": "no_matches#1",
+            "group": "no_matches",
+            "input": "1 0 0",
+            "expected": "1",
+            "got": "2",
+            "note": "wrong output",
+            "why": "The output differs from the expected output. Look for a wrong formula, an off-by-one error or a formatting difference (extra text, missing newline).",
+            "kind": "wrong_output",
+            "minimised_from": "'1 0\\n1\\n'"
+          }
+        ]
+      },
+      "feedback": "5/6 edge cases handled; fails: no_matches (1)",
+      "suggestions": [
+        "Compare your output with the expected output on the counter-test inputs above."
+      ]
+    },
+    {
+      "name": "complexity",
+      "analyzer": "complexity_estimator",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.08,
+      "contribution": 8.0,
+      "evidence": {
+        "required": "O(n)",
+        "sizes": [
+          125,
+          250,
+          500,
+          1000
+        ],
+        "generator": "array_with_target",
+        "instructions": [
+          206933,
+          288656,
+          452435,
+          778839
+        ],
+        "growth": 2.7637,
+        "exponent": 1.0,
+        "r_squared": 1.0,
+        "method": "callgrind",
+        "estimated": "O(n)"
+      },
+      "feedback": "Estimated O(n) (callgrind); required O(n)",
+      "suggestions": []
+    },
+    {
+      "name": "memory_safety",
+      "analyzer": "sanitizer_run",
+      "status": "ok",
+      "score": 0.66,
+      "weight": 0.1,
+      "contribution": 6.6,
+      "evidence": {
+        "tests_run": 12,
+        "findings": [
+          {
+            "kind": "heap-buffer-overflow",
+            "line": 9,
+            "message": "AddressSanitizer: heap-buffer-overflow",
+            "test": "001"
+          }
+        ],
+        "failing": [
+          {
+            "test": "001",
+            "input": "6 2\n2 3 2 -1 2 0",
+            "expected": "no sanitizer errors",
+            "got": "AddressSanitizer: heap-buffer-overflow",
+            "note": "heap-buffer-overflow at line 9",
+            "why": "The program reads or writes past the end of a heap block. Check the allocated size."
+          }
+        ]
+      },
+      "feedback": "heap-buffer-overflow at line 9",
+      "suggestions": [
+        "The program reads or writes past the end of a heap block. Check the allocated size."
+      ]
+    },
+    {
+      "name": "readability",
+      "analyzer": "llm_review",
+      "status": "ok",
+      "score": 0.8259,
+      "weight": 0.08,
+      "contribution": 6.61,
+      "evidence": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0,
+        "seed": 42,
+        "llm_share": 0.4,
+        "features": {
+          "comments": 0.758,
+          "names": 0.667,
+          "layout": 0.909,
+          "indentation": 1.0,
+          "spacing": 1.0,
+          "comment_ratio": 0.091,
+          "short_names": [
+            "a",
+            "t"
+          ],
+          "cramped_lines": 1,
+          "code_lines": 11
+        },
+        "deterministic_score": 0.8259,
+        "llm": {
+          "used": false,
+          "reason": "Ollama not reachable (URLError)"
+        }
+      },
+      "feedback": "Readability 8/10: short names (a, t), cramped lines",
+      "suggestions": [
+        "Use descriptive names instead of a, t (for example lhs, rhs, total).",
+        "Put one statement per line and give function bodies their own lines."
+      ]
+    },
+    {
+      "name": "originality",
+      "analyzer": "similarity_flag",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.08,
+      "contribution": 8.0,
+      "evidence": {
+        "tokens": 146,
+        "corpus_problem": "count_occurrences",
+        "corpus_size": 3,
+        "peers_compared": 0,
+        "max_similarity": 0.277,
+        "closest": "llm/count_occurrences/claude_2.c",
+        "threshold": 0.85,
+        "top_matches": [
+          {
+            "file": "llm/count_occurrences/claude_2.c",
+            "similarity": 0.277,
+            "kind": "llm_copy"
+          },
+          {
+            "file": "llm/count_occurrences/claude_3.c",
+            "similarity": 0.178,
+            "kind": "llm_copy"
+          },
+          {
+            "file": "llm/count_occurrences/claude_1.c",
+            "similarity": 0.095,
+            "kind": "llm_copy"
+          }
+        ]
+      },
+      "feedback": "max similarity 0.28 with llm/count_occurrences/claude_2.c (not flagged)",
+      "suggestions": []
+    }
+  ],
+  "flags": [],
+  "tool_versions": {
+    "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cppcheck": "Cppcheck 2.13.0",
+    "lizard": "1.25.0",
+    "valgrind": "valgrind-3.22.0",
+    "python": "3.13.18"
+  },
+  "usefulness_limitations": {
+    "usefulness": [
+      {
+        "use_case": "First-year programming courses with large classes",
+        "example": "A 400-student class submits 'add two integers' and 'sum an array'. The agent compiles, runs and grades every file under the same rules file in minutes and returns the same grade on every re-run, so a regrade request can be answered by re-running the agent.",
+        "benefit": "Consistent grading at scale, and every point can be traced to a metric and to evidence."
+      },
+      {
+        "use_case": "Instant feedback with a concrete failing input",
+        "example": "A student who writes int a,b; printf(\"%d\", a+b) is told that '2147483647 1' should print 2147483648 but printed -2147483648, with a one-line explanation of signed overflow and a UBSan line number.",
+        "benefit": "The student can fix the bug before the deadline instead of learning about it from a lost mark."
+      },
+      {
+        "use_case": "Plagiarism and LLM-copy triage for instructors",
+        "example": "A renamed copy of a classmate's sum_array solution reaches similarity 1.0 against the 0.85 threshold and is flagged. The instructor reviews only flagged pairs instead of every submission.",
+        "benefit": "Manual checking is narrowed to suspicious cases; a flag is a request for review, never a verdict."
+      },
+      {
+        "use_case": "Hiring and coding-interview screens",
+        "example": "A company grades 500 take-home submissions for a small task. The agent ranks them by correctness, edge-case handling and memory safety and keeps a per-metric explanation for each decision.",
+        "benefit": "Fast first-round filtering in which every rejection can be justified metric by metric."
+      }
+    ],
+    "limitations": [
+      {
+        "limitation": "The reference solution defines 'correct'",
+        "example": "The assignment's sample output expects -2147483648 for 2147483647 + 1, but our reference prints the exact sum 2147483648. A student who follows the sample literally and wraps around is marked wrong on those cases, and so is any student whose reading of an ambiguous specification differs from the reference.",
+        "mitigation": "State every ambiguity in the specification (done for overflow), have a second person review the reference, and let the instructor re-weight or drop a disputed case."
+      },
+      {
+        "limitation": "Complexity from static loop depth is unreliable",
+        "example": "When valgrind is unavailable, a binary search is loop depth 1 and is reported as O(n) instead of O(log n), so a student is penalised against an O(log n) bound. Measured with callgrind, optimised code can also differ from what the source suggests.",
+        "mitigation": "Install valgrind so counts are measured; the report marks the static estimate as low confidence and the instructor should review any complexity penalty it produced."
+      },
+      {
+        "limitation": "Copy detection misses restructured or unseen sources",
+        "example": "A student rewrites a copied sum_array solution from a for loop into a while (n-- > 0) loop: similarity drops to 0.18 and nothing is flagged. A solution copied from a website that is not in corpus/online is also never flagged, and the originality metric stays 1.0.",
+        "mitigation": "Grow the corpus (peers, several LLM-generated solutions per problem, collected web solutions), keep the flag as a prompt for human review, and pair it with an oral check for borderline cases."
+      },
+      {
+        "limitation": "Readability depends on the machine's local LLM",
+        "example": "Without Ollama the readability metric uses only the deterministic features (comment ratio, name length, line length), so the same file can receive a different readability score on a laptop with Ollama and on one without. Short but clear code with few comments is also under-rated by these features.",
+        "mitigation": "Set backend to 'none' in the rules for fully machine-independent grades, or pin the model and cache the responses; the report records which backend produced each score."
+      }
+    ]
+  }
+}

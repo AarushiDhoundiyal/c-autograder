@@ -47,3 +47,4 @@ GRADER_TIMEOUT_S = 300                   # hard limit for one grading job
 GRADER_SYNC = os.environ.get("GRADER_SYNC", "0") == "1"     # run jobs inline (tests / debugging)
 GRADER_USE_DOCKER = os.environ.get("GRADER_USE_DOCKER", "0") == "1"
 GRADER_DOCKER_IMAGE = os.environ.get("GRADER_DOCKER_IMAGE", "c-autograder")
+GRADER_COMPARE_PEERS = os.environ.get("GRADER_COMPARE_PEERS", "1") == "1"   # compare with classmates' submissions

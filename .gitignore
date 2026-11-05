@@ -7,9 +7,3 @@ reports/final/
 db.sqlite3
 media/
 corpus/peers/
-.venv/
-venv/
-*.pyc
-.idea/
-.vscode/
-.DS_Store

@@ -1,0 +1,104 @@
+[
+  {
+    "title": "sample",
+    "category": "normal",
+    "stdin": "5\n",
+    "expected_output": "8\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "small n=3",
+    "category": "normal",
+    "stdin": "3\n",
+    "expected_output": "3\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "small n=6",
+    "category": "normal",
+    "stdin": "6\n",
+    "expected_output": "13\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "n=9",
+    "category": "normal",
+    "stdin": "9\n",
+    "expected_output": "55\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "n=15",
+    "category": "normal",
+    "stdin": "15\n",
+    "expected_output": "987\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "n=25",
+    "category": "normal",
+    "stdin": "25\n",
+    "expected_output": "121393\n",
+    "approved": true,
+    "oracle_verified": true
+  },
+  {
+    "title": "zero stairs",
+    "category": "edge",
+    "stdin": "0\n",
+    "expected_output": "1\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "zero"
+  },
+  {
+    "title": "one stair",
+    "category": "edge",
+    "stdin": "1\n",
+    "expected_output": "1\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "one"
+  },
+  {
+    "title": "two stairs",
+    "category": "edge",
+    "stdin": "2\n",
+    "expected_output": "2\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "two"
+  },
+  {
+    "title": "first beyond 32bit count",
+    "category": "edge",
+    "stdin": "46\n",
+    "expected_output": "971215059\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "modulo_boundary"
+  },
+  {
+    "title": "large n",
+    "category": "edge",
+    "stdin": "200\n",
+    "expected_output": "529309711\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "large_n"
+  },
+  {
+    "title": "maximum n",
+    "category": "edge",
+    "stdin": "1000\n",
+    "expected_output": "107579939\n",
+    "approved": true,
+    "oracle_verified": true,
+    "edge_type": "maximum_n"
+  }
+]

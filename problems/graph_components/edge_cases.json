@@ -1,0 +1,23 @@
+{
+  "description": "Corner cases for graph_components, taken from the edge cases of the five-assignment test pack. Expected outputs come from reference.c, never from an LLM.",
+  "groups": {
+    "single_vertex": [
+      "1 0\n"
+    ],
+    "no_edges": [
+      "9 0\n"
+    ],
+    "reversed_endpoint_order": [
+      "5 3\n3 1\n2 1\n5 4\n"
+    ],
+    "isolated_vertices": [
+      "7 3\n6 2\n2 3\n5 7\n"
+    ],
+    "single_edge": [
+      "2 1\n2 1\n"
+    ],
+    "maximum_n": [
+      "120 119\n2 1\n3 2\n4 3\n5 4\n6 5\n7 6\n8 7\n9 8\n10 9\n11 10\n12 11\n13 12\n14 13\n15 14\n16 15\n17 16\n18 17\n19 18\n20 19\n21 20\n22 21\n23 22\n24 23\n25 24\n26 25\n27 26\n28 27\n29 28\n30 29\n31 30\n32 31\n33 32\n34 33\n35 34\n36 35\n37 36\n38 37\n39 38\n40 39\n41 40\n42 41\n43 42\n44 43\n45 44\n46 45\n47 46\n48 47\n49 48\n50 49\n51 50\n52 51\n53 52\n54 53\n55 54\n56 55\n57 56\n58 57\n59 58\n60 59\n61 60\n62 61\n63 62\n64 63\n65 64\n66 65\n67 66\n68 67\n69 68\n70 69\n71 70\n72 71\n73 72\n74 73\n75 74\n76 75\n77 76\n78 77\n79 78\n80 79\n81 80\n82 81\n83 82\n84 83\n85 84\n86 85\n87 86\n88 87\n89 88\n90 89\n91 90\n92 91\n93 92\n94 93\n95 94\n96 95\n97 96\n98 97\n99 98\n100 99\n101 100\n102 101\n103 102\n104 103\n105 104\n106 105\n107 106\n108 107\n109 108\n110 109\n111 110\n112 111\n113 112\n114 113\n115 114\n116 115\n117 116\n118 117\n119 118\n120 119\n"
+    ]
+  }
+}

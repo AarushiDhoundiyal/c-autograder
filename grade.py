@@ -14,10 +14,11 @@ def main(argv=None) -> int:
     ap.add_argument("--rules", required=True, help="rules JSON file")
     ap.add_argument("--out-dir", default="reports", help="where to write <name>.json/.txt (default: reports)")
     ap.add_argument("--workdir", help="keep build files in this directory (default: temp dir, deleted)")
+    ap.add_argument("--peers", help="folder of other students' submissions to compare with for originality")
     ap.add_argument("--quiet", action="store_true", help="do not print the text report")
     args = ap.parse_args(argv)
     try:
-        report = grade_submission(args.source, args.rules, workdir=args.workdir)
+        report = grade_submission(args.source, args.rules, workdir=args.workdir, peers_dir=args.peers)
     except RulesError as e:
         print("Invalid rules file:", file=sys.stderr)
         for err in e.errors:

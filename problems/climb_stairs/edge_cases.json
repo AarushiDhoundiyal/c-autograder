@@ -1,0 +1,39 @@
+{
+  "description": "Corner cases for climb_stairs. Small, overflow-boundary and large n. Expected outputs come from reference.c, never from an LLM.",
+  "groups": {
+    "small": [
+      "0\n",
+      "1\n",
+      "2\n",
+      "3\n",
+      "4\n"
+    ],
+    "mod_boundary": [
+      "43\n",
+      "44\n",
+      "45\n",
+      "46\n"
+    ],
+    "long_long_boundary": [
+      "91\n",
+      "92\n",
+      "93\n"
+    ],
+    "large": [
+      "1001\n",
+      "5000\n",
+      "999999\n"
+    ],
+    "whitespace": [
+      "   7  \n",
+      "\n\n10\n",
+      "\t15\t\n"
+    ],
+    "crlf": [
+      "20\r\n"
+    ],
+    "no_trailing_newline": [
+      "12"
+    ]
+  }
+}

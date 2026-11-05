@@ -89,8 +89,9 @@ def _load_usefulness():
         return None
 
 
-def grade_submission(source_path, rules, workdir=None, max_workers: int = 4) -> dict:
-    """Grade one C file under a rules file (path or Rules). Returns the report dict."""
+def grade_submission(source_path, rules, workdir=None, max_workers: int = 4, peers_dir=None) -> dict:
+    """Grade one C file under a rules file (path or Rules). Returns the report dict.
+    peers_dir: optional folder of other students' submissions for the originality check."""
     rules = rules if isinstance(rules, Rules) else load_rules(rules)
     source = Path(source_path).resolve()
     sb = sandbox.Sandbox(rules.time_limit_s, rules.memory_limit_mb)
@@ -117,7 +118,8 @@ def grade_submission(source_path, rules, workdir=None, max_workers: int = 4) -> 
         def make_ctx(spec):
             return AnalyzerContext(source_path=source, binary_path=binary, workdir=work,
                                    params=spec.params, rules=rules, sandbox=sb,
-                                   first_pass=fp, base_dirs=base_dirs)
+                                   first_pass=fp, base_dirs=base_dirs,
+                                   peers_dir=Path(peers_dir) if peers_dir else None)
 
         results: dict[str, AnalyzerResult] = {}
         src_only = [m for m in rules.metrics if not registry.get(m.analyzer).needs_execution]

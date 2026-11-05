@@ -43,15 +43,36 @@ def _loop():
             _q.task_done()
 
 
-def _command(src: Path, rules: Path, out: Path):
+def _command(src: Path, rules: Path, out: Path, peers: Path | None = None):
     if settings.GRADER_USE_DOCKER:
         work = src.parent
-        return ["docker", "run", "--rm", "--network", "none", "--pids-limit", "256", "--memory", "1g",
-                "-v", f"{work}:/work", settings.GRADER_DOCKER_IMAGE,
-                "python", "grade.py", f"/work/{src.name}", "--rules", "/work/rules.json",
-                "--out-dir", "/work/out", "--quiet"]
-    return [sys.executable, str(REPO_ROOT / "grade.py"), str(src), "--rules", str(rules),
-            "--out-dir", str(out), "--quiet"]
+        cmd = ["docker", "run", "--rm", "--network", "none", "--pids-limit", "256", "--memory", "1g",
+               "-v", f"{work}:/work", settings.GRADER_DOCKER_IMAGE,
+               "python", "grade.py", f"/work/{src.name}", "--rules", "/work/rules.json",
+               "--out-dir", "/work/out", "--quiet"]
+        return cmd + (["--peers", f"/work/{peers.name}"] if peers else [])
+    cmd = [sys.executable, str(REPO_ROOT / "grade.py"), str(src), "--rules", str(rules),
+           "--out-dir", str(out), "--quiet"]
+    return cmd + (["--peers", str(peers)] if peers else [])
+
+
+def write_peers(sub, folder: Path) -> int:
+    """Copy the latest submission of every other student for the same problem into `folder`
+    as <username>.c. The student's own submissions are never included."""
+    from .models import Submission
+    latest = {}
+    for other in (Submission.objects.filter(problem=sub.problem).exclude(student=sub.student)
+                  .select_related("student").order_by("id")):
+        latest[other.student.username] = other
+    folder.mkdir(parents=True, exist_ok=True)
+    written = 0
+    for username, other in sorted(latest.items()):
+        try:
+            (folder / f"{username}.c").write_bytes(Path(other.file.path).read_bytes())
+            written += 1
+        except OSError:
+            continue
+    return written
 
 
 def process_run(run_id: int):
@@ -68,7 +89,11 @@ def process_run(run_id: int):
         rules = tmp / "rules.json"
         rules.write_text(sub.ruleset.json_text, encoding="utf-8")
         out = tmp / "out"
-        proc = subprocess.run(_command(src, rules, out), cwd=REPO_ROOT, capture_output=True, text=True,
+        peers = None
+        if settings.GRADER_COMPARE_PEERS:
+            peers = tmp / "peers"
+            write_peers(sub, peers)
+        proc = subprocess.run(_command(src, rules, out, peers), cwd=REPO_ROOT, capture_output=True, text=True,
                               timeout=settings.GRADER_TIMEOUT_S)
         if proc.returncode != 0:
             raise RuntimeError((proc.stderr or proc.stdout or "grader failed").strip()[-1500:])

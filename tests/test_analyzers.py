@@ -112,3 +112,13 @@ def test_parse_sanitizer_variants():
     f = parse_sanitizer(leak, "add.c")
     assert f == [{"kind": "memory-leak", "line": 4, "message": "8 byte(s) leaked"}]
     assert parse_sanitizer(ub + "\n" + ub, "add.c").__len__() == 1       # deduplicated
+
+
+def test_parse_sanitizer_output_does_not_depend_on_memory_layout():
+    a = "p.c:15:9: runtime error: load of address 0x561a2cce7edc with insufficient space for an object of type 'int'"
+    b = a.replace("0x561a2cce7edc", "0x5586df554edc")
+    assert parse_sanitizer(a, "p.c") == parse_sanitizer(b, "p.c")
+    assert "<address>" in parse_sanitizer(a, "p.c")[0]["message"]
+    so = "==1==ERROR: AddressSanitizer: stack-overflow on address 0x7ffd\n    #0 0x5 in ways p.c:{}"
+    first, second = parse_sanitizer(so.format(6), "p.c"), parse_sanitizer(so.format(10), "p.c")
+    assert first == second and first[0]["kind"] == "stack-overflow" and first[0]["line"] is None

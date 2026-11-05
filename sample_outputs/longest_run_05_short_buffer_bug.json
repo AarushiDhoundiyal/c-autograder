@@ -1,0 +1,453 @@
+{
+  "submission": "longest_run_05_short_buffer_bug.c",
+  "submission_hash": "sha256:0c36743e47eddc28e888b326206cfb026cb25257a5acad03027159fb62b6b62c",
+  "rules_hash": "sha256:7509121742b667d7cc31899b644f1c5fad1c498faf52d01166b51107b75b6c00",
+  "problem": "longest_run",
+  "grade": 67.07,
+  "partial": false,
+  "first_pass": {
+    "compiled": true,
+    "compile_warnings": 0,
+    "compile_errors": [],
+    "smoke_ok": true,
+    "smoke_outcome": "OK",
+    "suspected_infinite_loop": false,
+    "static_sanity": {
+      "has_main": true,
+      "has_reader": true,
+      "has_writer": true,
+      "main_returns": true,
+      "ok": true
+    },
+    "notes": [],
+    "parser": "tree-sitter",
+    "isolation": {
+      "private_empty_cwd": true,
+      "privilege_drop": false
+    }
+  },
+  "metrics": [
+    {
+      "name": "correctness",
+      "analyzer": "io_tests",
+      "status": "ok",
+      "score": 0.4167,
+      "weight": 0.27,
+      "contribution": 11.25,
+      "evidence": {
+        "tests_passed": 5,
+        "tests_total": 12,
+        "failing_tests": [
+          "005",
+          "006",
+          "008",
+          "009",
+          "010",
+          "011",
+          "012"
+        ],
+        "failing": [
+          {
+            "test": "005",
+            "input": "abababababababababababababababababababababababababababababababababababababababab",
+            "expected": "1",
+            "got": "",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          },
+          {
+            "test": "006",
+            "input": "dadaaaeeaaaabadabecadaeddcaccaaaecbccceaeeeaacebaaaadcacabcaacdaaedaaaacccacaacacbcbceedeecaabaadedaebaadcddaadaaadaeacadaddadacedddbbaeebabcaeebcbaacddaadadbabaabbacdebdedaedbeaabaaedabbdaebaeebdcbaa",
+            "expected": "4",
+            "got": "",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          },
+          {
+            "test": "008",
+            "input": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+            "expected": "40",
+            "got": "",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          },
+          {
+            "test": "009",
+            "input": "abcdefghijklmnopqrstuvwxyz",
+            "expected": "1",
+            "got": "",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          },
+          {
+            "test": "010",
+            "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyz",
+            "expected": "80",
+            "got": "",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          }
+        ]
+      },
+      "feedback": "5/12 tests pass; first failure: test 005 (crashed with SIGABRT)",
+      "suggestions": [
+        "Run the failing input by hand and compare your output with the expected output.",
+        "Initialise pointers and check array bounds before using them."
+      ]
+    },
+    {
+      "name": "syntax",
+      "analyzer": "compiler_warnings",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.08,
+      "contribution": 8.0,
+      "evidence": {
+        "compiled": true,
+        "flags": "-Wall -Wextra -std=c11 -O2",
+        "werror_removed": false,
+        "added_O2": true,
+        "warnings": 0,
+        "by_flag": {},
+        "first_warnings": []
+      },
+      "feedback": "no warnings",
+      "suggestions": []
+    },
+    {
+      "name": "structure",
+      "analyzer": "static_analysis",
+      "status": "ok",
+      "score": 0.9125,
+      "weight": 0.08,
+      "contribution": 7.3,
+      "evidence": {
+        "measured_with": "lizard",
+        "functions": [
+          {
+            "name": "main",
+            "cyclomatic": 5,
+            "length": 11
+          }
+        ],
+        "limits": {
+          "max_cyclomatic": 8,
+          "max_function_length": 80
+        },
+        "cppcheck": [
+          {
+            "line": 4,
+            "severity": "error",
+            "id": "invalidScanfFormatWidth",
+            "message": "Width 1000 given in format string (no. 1) is larger than destination buffer 'word[16]', use %15s to prevent overflowing it."
+          }
+        ]
+      },
+      "feedback": "1 function(s), max cyclomatic 5, 1 cppcheck finding(s)",
+      "suggestions": [
+        "Line 4: Width 1000 given in format string (no. 1) is larger than destination buffer 'word[16]', use %15s to prevent overflowing it. (invalidScanfFormatWidth)"
+      ]
+    },
+    {
+      "name": "modularity",
+      "analyzer": "function_split",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.08,
+      "contribution": 8.0,
+      "evidence": {
+        "functions_defined": 1,
+        "function_names": [
+          "main"
+        ],
+        "helpers_defined": 0,
+        "helpers_called": [],
+        "expected_helpers": 1
+      },
+      "feedback": "helpers not required",
+      "suggestions": []
+    },
+    {
+      "name": "logical",
+      "analyzer": "edge_case_runner",
+      "status": "ok",
+      "score": 0.1667,
+      "weight": 0.15,
+      "contribution": 2.5,
+      "evidence": {
+        "cases_passed": 1,
+        "cases_total": 6,
+        "groups": {
+          "single_character": {
+            "passed": 1,
+            "total": 1
+          },
+          "all_equal": {
+            "passed": 0,
+            "total": 1
+          },
+          "all_distinct": {
+            "passed": 0,
+            "total": 1
+          },
+          "long_run_at_start": {
+            "passed": 0,
+            "total": 1
+          },
+          "long_run_at_end": {
+            "passed": 0,
+            "total": 1
+          },
+          "maximum_length": {
+            "passed": 0,
+            "total": 1
+          }
+        },
+        "invalid_cases": 0,
+        "counter_tests_found": 5,
+        "failing": [
+          {
+            "test": "all_equal#1",
+            "group": "all_equal",
+            "input": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+            "expected": "40",
+            "got": "(no output)",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          },
+          {
+            "test": "all_distinct#2",
+            "group": "all_distinct",
+            "input": "abcdefghijklmnopqrstuvwxyz",
+            "expected": "1",
+            "got": "(no output)",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          },
+          {
+            "test": "long_run_at_start#3",
+            "group": "long_run_at_start",
+            "input": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyz",
+            "expected": "80",
+            "got": "(no output)",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          },
+          {
+            "test": "long_run_at_end#4",
+            "group": "long_run_at_end",
+            "input": "aabzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+            "expected": "100",
+            "got": "(no output)",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          },
+          {
+            "test": "maximum_length#5",
+            "group": "maximum_length",
+            "input": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "expected": "1000",
+            "got": "(no output)",
+            "note": "crashed with SIGABRT",
+            "why": "The program aborted: failed assertion, double free or heap corruption.",
+            "kind": "crash"
+          }
+        ]
+      },
+      "feedback": "1/6 edge cases handled; fails: all_equal (1), all_distinct (1), long_run_at_start (1), long_run_at_end (1), maximum_length (1)",
+      "suggestions": [
+        "Initialise pointers and check array bounds before using them."
+      ]
+    },
+    {
+      "name": "complexity",
+      "analyzer": "complexity_estimator",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.08,
+      "contribution": 8.0,
+      "evidence": {
+        "required": "O(n)",
+        "sizes": [
+          125,
+          250,
+          500,
+          1000
+        ],
+        "generator": "repeated_char",
+        "loop_depth": 1,
+        "recursion": false,
+        "confidence": "low",
+        "note": "the program could not be measured at size 125 (SIGNAL)",
+        "method": "static_loop_depth",
+        "estimated": "O(n)"
+      },
+      "feedback": "Estimated O(n) (static loop depth); required O(n)",
+      "suggestions": []
+    },
+    {
+      "name": "memory_safety",
+      "analyzer": "sanitizer_run",
+      "status": "ok",
+      "score": 0.66,
+      "weight": 0.1,
+      "contribution": 6.6,
+      "evidence": {
+        "tests_run": 12,
+        "findings": [
+          {
+            "kind": "stack-buffer-overflow",
+            "line": 4,
+            "message": "AddressSanitizer: stack-buffer-overflow",
+            "test": "001"
+          }
+        ],
+        "failing": [
+          {
+            "test": "001",
+            "input": "aaabbccccdd",
+            "expected": "no sanitizer errors",
+            "got": "AddressSanitizer: stack-buffer-overflow",
+            "note": "stack-buffer-overflow at line 4",
+            "why": "The program reads or writes past the end of a local array. Check the index range."
+          }
+        ]
+      },
+      "feedback": "stack-buffer-overflow at line 4",
+      "suggestions": [
+        "The program reads or writes past the end of a local array. Check the index range."
+      ]
+    },
+    {
+      "name": "readability",
+      "analyzer": "llm_review",
+      "status": "ok",
+      "score": 0.9274,
+      "weight": 0.08,
+      "contribution": 7.42,
+      "evidence": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0,
+        "seed": 42,
+        "llm_share": 0.4,
+        "features": {
+          "comments": 0.758,
+          "names": 1.0,
+          "layout": 1.0,
+          "indentation": 1.0,
+          "spacing": 1.0,
+          "comment_ratio": 0.091,
+          "short_names": [],
+          "cramped_lines": 0,
+          "code_lines": 11
+        },
+        "deterministic_score": 0.9274,
+        "llm": {
+          "used": false,
+          "reason": "Ollama not reachable (URLError)"
+        }
+      },
+      "feedback": "Readability 9/10",
+      "suggestions": []
+    },
+    {
+      "name": "originality",
+      "analyzer": "similarity_flag",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.08,
+      "contribution": 8.0,
+      "evidence": {
+        "tokens": 93,
+        "corpus_problem": "longest_run",
+        "corpus_size": 3,
+        "peers_compared": 0,
+        "max_similarity": 0.282,
+        "closest": "llm/longest_run/claude_2.c",
+        "threshold": 0.85,
+        "top_matches": [
+          {
+            "file": "llm/longest_run/claude_2.c",
+            "similarity": 0.282,
+            "kind": "llm_copy"
+          },
+          {
+            "file": "llm/longest_run/claude_3.c",
+            "similarity": 0.222,
+            "kind": "llm_copy"
+          },
+          {
+            "file": "llm/longest_run/claude_1.c",
+            "similarity": 0.179,
+            "kind": "llm_copy"
+          }
+        ]
+      },
+      "feedback": "max similarity 0.28 with llm/longest_run/claude_2.c (not flagged)",
+      "suggestions": []
+    }
+  ],
+  "flags": [],
+  "tool_versions": {
+    "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cppcheck": "Cppcheck 2.13.0",
+    "lizard": "1.25.0",
+    "valgrind": "valgrind-3.22.0",
+    "python": "3.13.18"
+  },
+  "usefulness_limitations": {
+    "usefulness": [
+      {
+        "use_case": "First-year programming courses with large classes",
+        "example": "A 400-student class submits 'add two integers' and 'sum an array'. The agent compiles, runs and grades every file under the same rules file in minutes and returns the same grade on every re-run, so a regrade request can be answered by re-running the agent.",
+        "benefit": "Consistent grading at scale, and every point can be traced to a metric and to evidence."
+      },
+      {
+        "use_case": "Instant feedback with a concrete failing input",
+        "example": "A student who writes int a,b; printf(\"%d\", a+b) is told that '2147483647 1' should print 2147483648 but printed -2147483648, with a one-line explanation of signed overflow and a UBSan line number.",
+        "benefit": "The student can fix the bug before the deadline instead of learning about it from a lost mark."
+      },
+      {
+        "use_case": "Plagiarism and LLM-copy triage for instructors",
+        "example": "A renamed copy of a classmate's sum_array solution reaches similarity 1.0 against the 0.85 threshold and is flagged. The instructor reviews only flagged pairs instead of every submission.",
+        "benefit": "Manual checking is narrowed to suspicious cases; a flag is a request for review, never a verdict."
+      },
+      {
+        "use_case": "Hiring and coding-interview screens",
+        "example": "A company grades 500 take-home submissions for a small task. The agent ranks them by correctness, edge-case handling and memory safety and keeps a per-metric explanation for each decision.",
+        "benefit": "Fast first-round filtering in which every rejection can be justified metric by metric."
+      }
+    ],
+    "limitations": [
+      {
+        "limitation": "The reference solution defines 'correct'",
+        "example": "The assignment's sample output expects -2147483648 for 2147483647 + 1, but our reference prints the exact sum 2147483648. A student who follows the sample literally and wraps around is marked wrong on those cases, and so is any student whose reading of an ambiguous specification differs from the reference.",
+        "mitigation": "State every ambiguity in the specification (done for overflow), have a second person review the reference, and let the instructor re-weight or drop a disputed case."
+      },
+      {
+        "limitation": "Complexity from static loop depth is unreliable",
+        "example": "When valgrind is unavailable, a binary search is loop depth 1 and is reported as O(n) instead of O(log n), so a student is penalised against an O(log n) bound. Measured with callgrind, optimised code can also differ from what the source suggests.",
+        "mitigation": "Install valgrind so counts are measured; the report marks the static estimate as low confidence and the instructor should review any complexity penalty it produced."
+      },
+      {
+        "limitation": "Copy detection misses restructured or unseen sources",
+        "example": "A student rewrites a copied sum_array solution from a for loop into a while (n-- > 0) loop: similarity drops to 0.18 and nothing is flagged. A solution copied from a website that is not in corpus/online is also never flagged, and the originality metric stays 1.0.",
+        "mitigation": "Grow the corpus (peers, several LLM-generated solutions per problem, collected web solutions), keep the flag as a prompt for human review, and pair it with an oral check for borderline cases."
+      },
+      {
+        "limitation": "Readability depends on the machine's local LLM",
+        "example": "Without Ollama the readability metric uses only the deterministic features (comment ratio, name length, line length), so the same file can receive a different readability score on a laptop with Ollama and on one without. Short but clear code with few comments is also under-rated by these features.",
+        "mitigation": "Set backend to 'none' in the rules for fully machine-independent grades, or pin the model and cache the responses; the report records which backend produced each score."
+      }
+    ]
+  }
+}

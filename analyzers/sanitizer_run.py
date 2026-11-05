@@ -18,6 +18,7 @@ _UB = re.compile(r"(?P<file>[^\s:]+):(?P<line>\d+):\d+: runtime error: (?P<msg>.
 _ASAN = re.compile(r"ERROR: AddressSanitizer: (?P<kind>[\w-]+)")
 _LEAK = re.compile(r"^(Direct|Indirect) leak of (?P<bytes>\d+) byte")
 _LINE = lambda name: re.compile(re.escape(name) + r":(\d+)")
+_ADDRESS = re.compile(r"0x[0-9a-fA-F]+")
 
 WHY = {
     "signed-integer-overflow": "The arithmetic result does not fit in a signed int, which is undefined "
@@ -26,6 +27,8 @@ WHY = {
                    "allocation before the program ends.",
     "null-dereference": "The program reads or writes through a null pointer. Check pointers before use.",
     "SEGV": "The program accessed invalid memory. Check pointers and array indexes.",
+    "stack-overflow": "The recursion goes too deep and runs out of stack. Add or fix the base case, "
+                      "or replace deep recursion with a loop.",
     "heap-buffer-overflow": "The program reads or writes past the end of a heap block. Check the allocated size.",
     "stack-buffer-overflow": "The program reads or writes past the end of a local array. Check the index range.",
     "heap-use-after-free": "The program uses memory after free(). Do not touch a pointer after freeing it.",
@@ -61,13 +64,14 @@ def parse_sanitizer(stderr: str, src_name: str):
         m = _UB.search(ln)
         if m:
             findings.append({"kind": _kind_from_ub(m.group("msg")), "line": int(m.group("line")),
-                             "message": m.group("msg").strip()})
+                             "message": _ADDRESS.sub("<address>", m.group("msg").strip())})
             continue
         m = _ASAN.search(ln)
         if m:
             kind = m.group("kind")
-            findings.append({"kind": kind, "line": first_line_after(i + 1),
-                             "message": f"AddressSanitizer: {kind}"})
+            # the line where the stack runs out depends on the random stack layout, so it is not recorded
+            line = None if kind == "stack-overflow" else first_line_after(i + 1)
+            findings.append({"kind": kind, "line": line, "message": f"AddressSanitizer: {kind}"})
             continue
         m = _LEAK.match(ln.strip())
         if m:

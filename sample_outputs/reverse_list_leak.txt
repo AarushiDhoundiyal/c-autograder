@@ -1,0 +1,101 @@
+===== Grading report for reverse_list_leak.c =====
+Overall grade: 95.18 / 100
+
+Metric           Weight    Score   Points  Comment
+correctness         25%     1.00    25/25  9/9 tests pass
+syntax               5%     1.00      5/5  no warnings
+structure           10%     1.00    10/10  2 function(s), max cyclomatic 7, 0 cppcheck finding(s)
+modularity           5%     1.00      5/5  1 helper(s) used: reverse
+logical             20%     1.00    20/20  28/28 edge cases handled
+complexity          15%     1.00    15/15  Estimated O(n) (callgrind); required O(n)
+memory_safety       10%     0.66   6.6/10  memory-leak at line 28
+readability          5%     0.72   3.58/5  Readability 7/10: short names (nd, p)
+originality          5%     1.00      5/5  max similarity 0.39 with llm/reverse_list/claude_3.c (not flagged)
+
+--- Where you failed ---
+[memory_safety] test 002
+INPUT:    1
+7
+EXPECTED: no sanitizer errors
+GOT:      16 byte(s) leaked (memory-leak at line 28)
+WHY:      Memory obtained with malloc/calloc is never released. Call
+          free() on every allocation before the program ends.
+
+--- Suggestions to raise the grade ---
+- Memory obtained with malloc/calloc is never released. Call free() on every allocation before the program ends.
+- Use descriptive names instead of nd, p (for example lhs, rhs, total).
+
+--- Usefulness & limitations of this evaluation ---
+Useful for:
+1. First-year programming courses with large classes
+   Example: A 400-student class submits 'add two integers' and 'sum an
+            array'. The agent compiles, runs and grades every file
+            under the same rules file in minutes and returns the same
+            grade on every re-run, so a regrade request can be answered
+            by re-running the agent.
+   Benefit: Consistent grading at scale, and every point can be traced
+            to a metric and to evidence.
+2. Instant feedback with a concrete failing input
+   Example: A student who writes int a,b; printf("%d", a+b) is told
+            that '2147483647 1' should print 2147483648 but printed
+            -2147483648, with a one-line explanation of signed overflow
+            and a UBSan line number.
+   Benefit: The student can fix the bug before the deadline instead of
+            learning about it from a lost mark.
+3. Plagiarism and LLM-copy triage for instructors
+   Example: A renamed copy of a classmate's sum_array solution reaches
+            similarity 1.0 against the 0.85 threshold and is flagged.
+            The instructor reviews only flagged pairs instead of every
+            submission.
+   Benefit: Manual checking is narrowed to suspicious cases; a flag is
+            a request for review, never a verdict.
+4. Hiring and coding-interview screens
+   Example: A company grades 500 take-home submissions for a small
+            task. The agent ranks them by correctness, edge-case
+            handling and memory safety and keeps a per-metric
+            explanation for each decision.
+   Benefit: Fast first-round filtering in which every rejection can be
+            justified metric by metric.
+Limits of this report:
+1. The reference solution defines 'correct'
+   Example: The assignment's sample output expects -2147483648 for
+            2147483647 + 1, but our reference prints the exact sum
+            2147483648. A student who follows the sample literally and
+            wraps around is marked wrong on those cases, and so is any
+            student whose reading of an ambiguous specification differs
+            from the reference.
+   Fix: State every ambiguity in the specification (done for overflow),
+        have a second person review the reference, and let the
+        instructor re-weight or drop a disputed case.
+2. Complexity from static loop depth is unreliable
+   Example: When valgrind is unavailable, a binary search is loop depth
+            1 and is reported as O(n) instead of O(log n), so a student
+            is penalised against an O(log n) bound. Measured with
+            callgrind, optimised code can also differ from what the
+            source suggests.
+   Fix: Install valgrind so counts are measured; the report marks the
+        static estimate as low confidence and the instructor should
+        review any complexity penalty it produced.
+3. Copy detection misses restructured or unseen sources
+   Example: A student rewrites a copied sum_array solution from a for
+            loop into a while (n-- > 0) loop: similarity drops to 0.18
+            and nothing is flagged. A solution copied from a website
+            that is not in corpus/online is also never flagged, and the
+            originality metric stays 1.0.
+   Fix: Grow the corpus (peers, several LLM-generated solutions per
+        problem, collected web solutions), keep the flag as a prompt
+        for human review, and pair it with an oral check for borderline
+        cases.
+4. Readability depends on the machine's local LLM
+   Example: Without Ollama the readability metric uses only the
+            deterministic features (comment ratio, name length, line
+            length), so the same file can receive a different
+            readability score on a laptop with Ollama and on one
+            without. Short but clear code with few comments is also
+            under-rated by these features.
+   Fix: Set backend to 'none' in the rules for fully
+        machine-independent grades, or pin the model and cache the
+        responses; the report records which backend produced each
+        score.
+
+rules sha256:f3572f5bd285...  submission sha256:6b612a163066...

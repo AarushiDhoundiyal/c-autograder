@@ -1,0 +1,23 @@
+{
+  "description": "Corner cases for stairs_dp, taken from the edge cases of the five-assignment test pack. Expected outputs come from reference.c, never from an LLM.",
+  "groups": {
+    "zero": [
+      "0\n"
+    ],
+    "one": [
+      "1\n"
+    ],
+    "two": [
+      "2\n"
+    ],
+    "modulo_boundary": [
+      "46\n"
+    ],
+    "large_n": [
+      "200\n"
+    ],
+    "maximum_n": [
+      "1000\n"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "description": "Corner cases for hanoi. Zero disks, small towers and input formatting. Expected outputs come from reference.c, never from an LLM.",
+  "groups": {
+    "zero": [
+      "0\n"
+    ],
+    "small": [
+      "1\n",
+      "2\n",
+      "3\n"
+    ],
+    "medium": [
+      "6\n",
+      "9\n",
+      "11\n"
+    ],
+    "whitespace": [
+      "  4  \n",
+      "\n5\n"
+    ],
+    "crlf": [
+      "3\r\n"
+    ],
+    "no_trailing_newline": [
+      "2"
+    ]
+  }
+}

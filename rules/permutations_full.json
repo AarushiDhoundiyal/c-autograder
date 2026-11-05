@@ -1,0 +1,87 @@
+{
+  "problem": "permutations",
+  "description": "Backtracking; output size is n!, so complexity is not graded.",
+  "time_limit_s": 2,
+  "memory_limit_mb": 128,
+  "skipped_policy": "zero",
+  "smoke_input": "3\n",
+  "metrics": [
+    {
+      "name": "correctness",
+      "analyzer": "io_tests",
+      "weight": 0.3,
+      "params": {
+        "testset_dir": "problems/permutations/tests",
+        "compare": "tokens"
+      }
+    },
+    {
+      "name": "syntax",
+      "analyzer": "compiler_warnings",
+      "weight": 0.05,
+      "params": {
+        "flags": "-Wall -Wextra -std=c11",
+        "penalty_per_warning": 0.1
+      }
+    },
+    {
+      "name": "structure",
+      "analyzer": "static_analysis",
+      "weight": 0.1,
+      "params": {
+        "max_cyclomatic": 8,
+        "max_function_length": 40
+      }
+    },
+    {
+      "name": "modularity",
+      "analyzer": "function_split",
+      "weight": 0.1,
+      "params": {
+        "expect_helpers": true,
+        "min_functions": 2
+      }
+    },
+    {
+      "name": "logical",
+      "analyzer": "edge_case_runner",
+      "weight": 0.25,
+      "params": {
+        "reference": "problems/permutations/reference.c",
+        "edge_cases_file": "problems/permutations/edge_cases.json"
+      }
+    },
+    {
+      "name": "memory_safety",
+      "analyzer": "sanitizer_run",
+      "weight": 0.1,
+      "params": {
+        "testset_dir": "problems/permutations/tests",
+        "flags": "-fsanitize=address,undefined -g -O0"
+      }
+    },
+    {
+      "name": "readability",
+      "analyzer": "llm_review",
+      "weight": 0.05,
+      "params": {
+        "backend": "ollama",
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0,
+        "seed": 42,
+        "cache_dir": ".cache/llm",
+        "llm_share": 0.4
+      }
+    },
+    {
+      "name": "originality",
+      "analyzer": "similarity_flag",
+      "weight": 0.05,
+      "params": {
+        "corpus_dir": "corpus/",
+        "flag_threshold": 0.85,
+        "min_tokens": 40
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "description": "Corner cases for nqueens. Boards with no solution, known counts and input formatting. Expected outputs come from reference.c, never from an LLM.",
+  "groups": {
+    "smallest": [
+      "1\n"
+    ],
+    "no_solution": [
+      "2\n",
+      "3\n"
+    ],
+    "known": [
+      "4\n",
+      "5\n",
+      "6\n",
+      "8\n"
+    ],
+    "largest": [
+      "10\n"
+    ],
+    "whitespace": [
+      "  7 \n",
+      "\n9\n"
+    ],
+    "crlf": [
+      "4\r\n"
+    ]
+  }
+}

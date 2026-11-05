@@ -1,9 +1,16 @@
 """originality: copy detection by normalised winnowing similarity.
 
-params: corpus_dir ("corpus/"), flag_threshold (0.85), min_tokens (30), k (5), window (4),
+params: corpus_dir ("corpus/"), corpus_problem (default: the rules file's "problem"),
+        flag_threshold (0.85), min_tokens (30), k (5), window (4),
         penalize (true: lower the score when above the threshold)
-Corpus layout: corpus/peers/*.c (or loose *.c), corpus/llm/*.c (LLM-generated
-solutions), corpus/online/*.c (collected online solutions).
+Corpus layout: corpus/<kind>/<problem>/*.c, where kind is peers (earlier batches),
+llm (LLM-generated solutions) or online (collected online solutions), and problem is
+the "problem" name of the rules file. A submission is compared only with the folders
+of its own problem; loose .c files directly in corpus/ or corpus/<kind>/ are compared
+with every problem.
+Classmates: when the grader is given a peers folder (grade.py --peers, or the web
+worker, which passes the latest submission of every other student for the same
+problem), every .c file in it is compared as well, except the submission itself.
 
 A match above the threshold becomes a FLAG for human review, never a verdict.
 Programs shorter than min_tokens are never flagged: tiny programs look alike.
@@ -20,6 +27,25 @@ KIND = {"llm": "llm_copy", "online": "online_copy"}
 
 def _kind(rel: Path) -> str:
     return KIND.get(rel.parts[0], "similarity") if len(rel.parts) > 1 else "similarity"
+
+
+def corpus_files(corpus: Path, problem: str) -> list:
+    """The corpus files that apply to `problem`, as (path, name shown in the report, flag kind)."""
+    if not corpus.is_dir():
+        return []
+    out = []
+    for f in sorted(corpus.rglob("*.c")):
+        rel = f.relative_to(corpus)
+        if len(rel.parts) <= 2 or rel.parts[1] == problem:
+            out.append((f, rel.as_posix(), _kind(rel)))
+    return out
+
+
+def peer_files(peers: Path, me: Path) -> list:
+    if not peers or not peers.is_dir():
+        return []
+    return [(f, "peers/" + f.relative_to(peers).as_posix(), "similarity")
+            for f in sorted(peers.rglob("*.c")) if f.resolve() != me]
 
 
 def _style_hint(src: str):
@@ -44,21 +70,23 @@ class SimilarityFlag:
         toks = normalise_tokens(src)
         mine = fingerprints(toks, k, w)
         corpus = ctx.resolve(p.get("corpus_dir", "corpus/"))
-        files = []
-        if corpus.is_dir():
-            me = ctx.source_path.resolve()
-            files = [f for f in sorted(corpus.rglob("*.c")) if f.resolve() != me]
+        problem = p.get("corpus_problem") or ctx.rules.problem
+        me = ctx.source_path.resolve()
+        stored = [c for c in corpus_files(corpus, problem) if c[0].resolve() != me]
+        peers = peer_files(ctx.peers_dir, me)
+        files = stored + peers
         matches = []
-        for f in files:
+        for f, name, kind in files:
             other = fingerprints(normalise_tokens(f.read_text(encoding="utf-8", errors="replace")), k, w)
-            matches.append((jaccard(mine, other), f.relative_to(corpus).as_posix(), _kind(f.relative_to(corpus))))
+            matches.append((jaccard(mine, other), name, kind))
         matches.sort(key=lambda m: (-m[0], m[1]))
         best = matches[0] if matches else (0.0, None, None)
-        ev = {"tokens": len(toks), "corpus_size": len(files), "max_similarity": round(best[0], 3),
+        ev = {"tokens": len(toks), "corpus_problem": problem, "corpus_size": len(stored),
+              "peers_compared": len(peers), "max_similarity": round(best[0], 3),
               "closest": best[1], "threshold": thr,
               "top_matches": [{"file": m[1], "similarity": round(m[0], 3), "kind": m[2]} for m in matches[:3]]}
         if not files:
-            ev["note"] = "corpus is empty or missing: nothing to compare against"
+            ev["note"] = "corpus and peers are empty or missing: nothing to compare against"
         flags = []
         hint = _style_hint(src)
         if hint:

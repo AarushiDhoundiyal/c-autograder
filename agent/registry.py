@@ -40,6 +40,7 @@ class AnalyzerContext:
     sandbox: Any                  # agent.sandbox.Sandbox
     first_pass: dict              # results of compile check / smoke run / static sanity
     base_dirs: list = field(default_factory=list)
+    peers_dir: Path | None = None  # other students' submissions for the same problem, if given
 
     @property
     def time_limit_s(self) -> float:

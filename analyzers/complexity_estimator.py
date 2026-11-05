@@ -4,10 +4,13 @@ Method (callgrind): run the program on the sizes in params["sizes"] (stdin built
 by a seeded generator), count executed instructions with valgrind callgrind and
 fit I(n) = a + b * n^k by least squares (a absorbs the start-up cost, k is the
 growth exponent, found by a grid search; needs >= 3 sizes). k maps to a class.
-Fallback (no valgrind, or
-growth too small to measure): static loop-nesting depth, reported as low confidence.
+A program that does not finish one of the sizes within timeout_s under callgrind
+scores 0, because it is too slow for the required class. Fallback (no valgrind, a
+crash during measurement, or growth too small to measure): static loop-nesting
+depth, reported as low confidence.
 
-params: required ("O(1)"...), sizes, generator ("scalar"|"single_n"|"array"),
+params: required ("O(1)"...), sizes, generator ("scalar"|"single_n"|"array"|"array_with_target"|
+        "repeated_char"|"path_graph"),
         method ("auto"|"callgrind"|"static"), seed, growth_threshold (0.05),
         timeout_s (30), profile (false: add valgrind/perf profile to the evidence)
 Score: 1.0 if the estimate is within the required class, 0.5 one class above, else 0.
@@ -15,7 +18,7 @@ Score: 1.0 if the estimate is within the required class, 0.5 one class above, el
 import random
 import re
 
-from agent import csource, profiling
+from agent import csource, profiling, sandbox
 from agent.counter_tests import SIZE_GENERATORS
 from agent.registry import register, AnalyzerResult
 
@@ -147,14 +150,17 @@ def static_estimate(src: str) -> dict:
 
 
 def _measure(ctx, sizes, gen, seed, timeout):
+    """Returns (counts, note, timed_out)."""
     counts = []
     for n in sizes:
         data = gen(n, random.Random(seed * 1000003 + n))
-        c = profiling.callgrind_instructions(ctx.sandbox, ctx.binary_path, data, ctx.workdir, timeout)
-        if c is None:
-            return None, f"the program could not be measured at size {n}"
+        c, outcome = profiling.callgrind_run(ctx.sandbox, ctx.binary_path, data, ctx.workdir, timeout)
+        if outcome == sandbox.TIMEOUT:
+            return None, f"the program did not finish within {timeout:g} s at size {n}", True
+        if c is None or outcome != sandbox.OK:
+            return None, f"the program could not be measured at size {n} ({outcome or 'no count'})", False
         counts.append(c)
-    return counts, None
+    return counts, None, False
 
 
 @register("complexity_estimator", needs_execution=True)
@@ -172,15 +178,21 @@ class ComplexityEstimator:
         seed = int(p.get("seed", 12345))
         static = static_estimate(ctx.source_path.read_text(encoding="utf-8", errors="replace"))
         ev = {"required": CLASSES[required], "sizes": sizes, "generator": gname}
-        counts, note = None, None
+        counts, note, timed_out = None, None, False
         if method in ("auto", "callgrind"):
             if profiling.have("valgrind"):
-                counts, note = _measure(ctx, sizes, SIZE_GENERATORS[gname], seed,
-                                        float(p.get("timeout_s", 30)))
+                counts, note, timed_out = _measure(ctx, sizes, SIZE_GENERATORS[gname], seed,
+                                                   float(p.get("timeout_s", 30)))
             elif method == "callgrind":
                 raise RuntimeError("valgrind is not installed (sudo apt install valgrind)")
             else:
                 note = "valgrind is not installed"
+        if timed_out:
+            ev.update({"method": "callgrind", "estimated": "did not finish", "note": note})
+            return AnalyzerResult(score=0.0, evidence=ev,
+                                  feedback=f"Too slow: {note}; required {CLASSES[required]}",
+                                  suggestions=["The program is far slower than required: look for repeated "
+                                               "work, such as recursion that recomputes the same values."])
         est, how = None, "static_loop_depth"
         if counts:
             growth = (counts[-1] - counts[0]) / counts[0] if counts[0] else 0.0

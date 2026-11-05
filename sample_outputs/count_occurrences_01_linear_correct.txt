@@ -1,0 +1,92 @@
+===== Grading report for count_occurrences_01_linear_correct.c =====
+Overall grade: 96.93 / 100
+
+Metric           Weight    Score   Points  Comment
+correctness         27%     1.00    27/27  12/12 tests pass
+syntax               8%     1.00      8/8  no warnings
+structure            8%     1.00      8/8  1 function(s), max cyclomatic 8, 0 cppcheck finding(s)
+modularity           8%     1.00      8/8  helpers not required
+logical             15%     1.00    15/15  6/6 edge cases handled
+complexity           8%     1.00      8/8  Estimated O(n) (callgrind); required O(n)
+memory_safety       10%     1.00    10/10  ASan/UBSan clean
+readability          8%     0.62   4.93/8  Readability 6/10: no comments, short names (a, t)
+originality          8%     1.00      8/8  max similarity 0.22 with llm/count_occurrences/claude_2.c (not flagged)
+
+--- Suggestions to raise the grade ---
+- Add a one-line comment above main() and above any non-obvious step.
+- Use descriptive names instead of a, t (for example lhs, rhs, total).
+
+--- Usefulness & limitations of this evaluation ---
+Useful for:
+1. First-year programming courses with large classes
+   Example: A 400-student class submits 'add two integers' and 'sum an
+            array'. The agent compiles, runs and grades every file
+            under the same rules file in minutes and returns the same
+            grade on every re-run, so a regrade request can be answered
+            by re-running the agent.
+   Benefit: Consistent grading at scale, and every point can be traced
+            to a metric and to evidence.
+2. Instant feedback with a concrete failing input
+   Example: A student who writes int a,b; printf("%d", a+b) is told
+            that '2147483647 1' should print 2147483648 but printed
+            -2147483648, with a one-line explanation of signed overflow
+            and a UBSan line number.
+   Benefit: The student can fix the bug before the deadline instead of
+            learning about it from a lost mark.
+3. Plagiarism and LLM-copy triage for instructors
+   Example: A renamed copy of a classmate's sum_array solution reaches
+            similarity 1.0 against the 0.85 threshold and is flagged.
+            The instructor reviews only flagged pairs instead of every
+            submission.
+   Benefit: Manual checking is narrowed to suspicious cases; a flag is
+            a request for review, never a verdict.
+4. Hiring and coding-interview screens
+   Example: A company grades 500 take-home submissions for a small
+            task. The agent ranks them by correctness, edge-case
+            handling and memory safety and keeps a per-metric
+            explanation for each decision.
+   Benefit: Fast first-round filtering in which every rejection can be
+            justified metric by metric.
+Limits of this report:
+1. The reference solution defines 'correct'
+   Example: The assignment's sample output expects -2147483648 for
+            2147483647 + 1, but our reference prints the exact sum
+            2147483648. A student who follows the sample literally and
+            wraps around is marked wrong on those cases, and so is any
+            student whose reading of an ambiguous specification differs
+            from the reference.
+   Fix: State every ambiguity in the specification (done for overflow),
+        have a second person review the reference, and let the
+        instructor re-weight or drop a disputed case.
+2. Complexity from static loop depth is unreliable
+   Example: When valgrind is unavailable, a binary search is loop depth
+            1 and is reported as O(n) instead of O(log n), so a student
+            is penalised against an O(log n) bound. Measured with
+            callgrind, optimised code can also differ from what the
+            source suggests.
+   Fix: Install valgrind so counts are measured; the report marks the
+        static estimate as low confidence and the instructor should
+        review any complexity penalty it produced.
+3. Copy detection misses restructured or unseen sources
+   Example: A student rewrites a copied sum_array solution from a for
+            loop into a while (n-- > 0) loop: similarity drops to 0.18
+            and nothing is flagged. A solution copied from a website
+            that is not in corpus/online is also never flagged, and the
+            originality metric stays 1.0.
+   Fix: Grow the corpus (peers, several LLM-generated solutions per
+        problem, collected web solutions), keep the flag as a prompt
+        for human review, and pair it with an oral check for borderline
+        cases.
+4. Readability depends on the machine's local LLM
+   Example: Without Ollama the readability metric uses only the
+            deterministic features (comment ratio, name length, line
+            length), so the same file can receive a different
+            readability score on a laptop with Ollama and on one
+            without. Short but clear code with few comments is also
+            under-rated by these features.
+   Fix: Set backend to 'none' in the rules for fully
+        machine-independent grades, or pin the model and cache the
+        responses; the report records which backend produced each
+        score.
+
+rules sha256:604cbfd74f70...  submission sha256:d84b4477d8a5...

@@ -1,0 +1,33 @@
+{
+  "description": "Corner cases for reverse_list. Empty and one-node lists, duplicates and extreme values, plus seeded random lists. Expected outputs come from reference.c, never from an LLM.",
+  "groups": {
+    "empty": [
+      "0\n"
+    ],
+    "single": [
+      "1\n42\n"
+    ],
+    "two": [
+      "2\n1 2\n"
+    ],
+    "duplicates": [
+      "5\n3 3 1 3 1\n"
+    ],
+    "extremes": [
+      "3\n-2147483648 0 2147483647\n"
+    ],
+    "whitespace": [
+      "4\n1\n2\n\n3   4\n"
+    ],
+    "crlf": [
+      "3\r\n1 2 3\r\n"
+    ],
+    "no_trailing_newline": [
+      "3\n7 8 9"
+    ]
+  },
+  "random": {
+    "generator": "int_list",
+    "count": 20
+  }
+}

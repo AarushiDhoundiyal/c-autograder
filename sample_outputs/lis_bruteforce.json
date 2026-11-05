@@ -1,0 +1,372 @@
+{
+  "submission": "lis_bruteforce.c",
+  "submission_hash": "sha256:ea7bde926e8608e1388227438dabc9993b260a9c37c4e335b0958c2ded2a1083",
+  "rules_hash": "sha256:a081c478f7154e255139b757941d88d29f60ed5fc2aa245fa9a184f1c4a7569b",
+  "problem": "lis",
+  "grade": 78.79,
+  "partial": false,
+  "first_pass": {
+    "compiled": true,
+    "compile_warnings": 0,
+    "compile_errors": [],
+    "smoke_ok": true,
+    "smoke_outcome": "OK",
+    "suspected_infinite_loop": false,
+    "static_sanity": {
+      "has_main": true,
+      "has_reader": true,
+      "has_writer": true,
+      "main_returns": true,
+      "ok": true
+    },
+    "notes": [],
+    "parser": "tree-sitter",
+    "isolation": {
+      "private_empty_cwd": true,
+      "privilege_drop": false
+    }
+  },
+  "metrics": [
+    {
+      "name": "correctness",
+      "analyzer": "io_tests",
+      "status": "ok",
+      "score": 0.8,
+      "weight": 0.25,
+      "contribution": 20.0,
+      "evidence": {
+        "tests_passed": 8,
+        "tests_total": 10,
+        "failing_tests": [
+          "009",
+          "010"
+        ],
+        "failing": [
+          {
+            "test": "009",
+            "input": "1000\n-255285 737032 -625112 482073 -941695 -219288 -240208 -450717 -659178 376802 -976639 -606299 -352654 306030 282451 -254258 104446 -998835 193835 905344 90553 284089 912728 160008 -880334 718943 2...[cut]",
+            "expected": "56",
+            "got": "",
+            "note": "timed out after 2s",
+            "why": "The program did not finish in time. Look for a loop that never ends or an algorithm that is too slow for this input.",
+            "kind": "timeout"
+          },
+          {
+            "test": "010",
+            "input": "5000\n-995048037 -2097694965 -133408170 785074787 890274907 -633647666 2078036947 -2119598492 582669565 -2122022370 1120443950 591589609 226473216 -273813045 666267252 1319571320 -256355432 -76458736 3...[cut]",
+            "expected": "134",
+            "got": "",
+            "note": "timed out after 2s",
+            "why": "The program did not finish in time. Look for a loop that never ends or an algorithm that is too slow for this input.",
+            "kind": "timeout"
+          }
+        ]
+      },
+      "feedback": "8/10 tests pass; first failure: test 009 (timed out after 2s)",
+      "suggestions": [
+        "Run the failing input by hand and compare your output with the expected output."
+      ]
+    },
+    {
+      "name": "syntax",
+      "analyzer": "compiler_warnings",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.05,
+      "contribution": 5.0,
+      "evidence": {
+        "compiled": true,
+        "flags": "-Wall -Wextra -std=c11 -O2",
+        "werror_removed": false,
+        "added_O2": true,
+        "warnings": 0,
+        "by_flag": {},
+        "first_warnings": []
+      },
+      "feedback": "no warnings",
+      "suggestions": []
+    },
+    {
+      "name": "structure",
+      "analyzer": "static_analysis",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "evidence": {
+        "measured_with": "lizard",
+        "functions": [
+          {
+            "name": "longest",
+            "cyclomatic": 4,
+            "length": 13
+          },
+          {
+            "name": "main",
+            "cyclomatic": 4,
+            "length": 12
+          }
+        ],
+        "limits": {
+          "max_cyclomatic": 8,
+          "max_function_length": 40
+        },
+        "cppcheck": []
+      },
+      "feedback": "2 function(s), max cyclomatic 4, 0 cppcheck finding(s)",
+      "suggestions": []
+    },
+    {
+      "name": "modularity",
+      "analyzer": "function_split",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.05,
+      "contribution": 5.0,
+      "evidence": {
+        "functions_defined": 2,
+        "function_names": [
+          "longest",
+          "main"
+        ],
+        "helpers_defined": 1,
+        "helpers_called": [
+          "longest"
+        ],
+        "expected_helpers": 1
+      },
+      "feedback": "1 helper(s) used: longest",
+      "suggestions": []
+    },
+    {
+      "name": "logical",
+      "analyzer": "edge_case_runner",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.2,
+      "contribution": 20.0,
+      "evidence": {
+        "cases_passed": 33,
+        "cases_total": 33,
+        "groups": {
+          "empty": {
+            "passed": 1,
+            "total": 1
+          },
+          "single": {
+            "passed": 2,
+            "total": 2
+          },
+          "all_equal": {
+            "passed": 1,
+            "total": 1
+          },
+          "decreasing": {
+            "passed": 1,
+            "total": 1
+          },
+          "increasing": {
+            "passed": 1,
+            "total": 1
+          },
+          "duplicates": {
+            "passed": 2,
+            "total": 2
+          },
+          "not_contiguous": {
+            "passed": 2,
+            "total": 2
+          },
+          "extremes": {
+            "passed": 1,
+            "total": 1
+          },
+          "whitespace": {
+            "passed": 1,
+            "total": 1
+          },
+          "crlf": {
+            "passed": 1,
+            "total": 1
+          },
+          "random": {
+            "passed": 20,
+            "total": 20
+          }
+        },
+        "invalid_cases": 0,
+        "counter_tests_found": 0,
+        "failing": [],
+        "random_seed": 991160910
+      },
+      "feedback": "33/33 edge cases handled",
+      "suggestions": []
+    },
+    {
+      "name": "complexity",
+      "analyzer": "complexity_estimator",
+      "status": "ok",
+      "score": 0.0,
+      "weight": 0.15,
+      "contribution": 0.0,
+      "evidence": {
+        "required": "O(n^2)",
+        "sizes": [
+          250,
+          500,
+          1000,
+          2000
+        ],
+        "generator": "array",
+        "method": "callgrind",
+        "estimated": "did not finish",
+        "note": "the program did not finish within 30 s at size 250"
+      },
+      "feedback": "Too slow: the program did not finish within 30 s at size 250; required O(n^2)",
+      "suggestions": [
+        "The program is far slower than required: look for repeated work, such as recursion that recomputes the same values."
+      ]
+    },
+    {
+      "name": "memory_safety",
+      "analyzer": "sanitizer_run",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "evidence": {
+        "tests_run": 10,
+        "findings": [],
+        "failing": []
+      },
+      "feedback": "ASan/UBSan clean",
+      "suggestions": []
+    },
+    {
+      "name": "readability",
+      "analyzer": "llm_review",
+      "status": "ok",
+      "score": 0.757,
+      "weight": 0.05,
+      "contribution": 3.79,
+      "evidence": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0,
+        "seed": 42,
+        "llm_share": 0.4,
+        "features": {
+          "comments": 0.309,
+          "names": 0.857,
+          "layout": 1.0,
+          "indentation": 1.0,
+          "spacing": 1.0,
+          "comment_ratio": 0.037,
+          "short_names": [
+            "a"
+          ],
+          "cramped_lines": 0,
+          "code_lines": 27
+        },
+        "deterministic_score": 0.757,
+        "llm": {
+          "used": false,
+          "reason": "Ollama not reachable (URLError)"
+        }
+      },
+      "feedback": "Readability 8/10: short names (a)",
+      "suggestions": [
+        "Use descriptive names instead of a (for example lhs, rhs, total)."
+      ]
+    },
+    {
+      "name": "originality",
+      "analyzer": "similarity_flag",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.05,
+      "contribution": 5.0,
+      "evidence": {
+        "tokens": 167,
+        "corpus_problem": "lis",
+        "corpus_size": 3,
+        "peers_compared": 0,
+        "max_similarity": 0.247,
+        "closest": "llm/lis/claude_3.c",
+        "threshold": 0.85,
+        "top_matches": [
+          {
+            "file": "llm/lis/claude_3.c",
+            "similarity": 0.247,
+            "kind": "llm_copy"
+          },
+          {
+            "file": "llm/lis/claude_2.c",
+            "similarity": 0.147,
+            "kind": "llm_copy"
+          },
+          {
+            "file": "llm/lis/claude_1.c",
+            "similarity": 0.134,
+            "kind": "llm_copy"
+          }
+        ]
+      },
+      "feedback": "max similarity 0.25 with llm/lis/claude_3.c (not flagged)",
+      "suggestions": []
+    }
+  ],
+  "flags": [],
+  "tool_versions": {
+    "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cppcheck": "Cppcheck 2.13.0",
+    "lizard": "1.25.0",
+    "valgrind": "valgrind-3.22.0",
+    "python": "3.13.18"
+  },
+  "usefulness_limitations": {
+    "usefulness": [
+      {
+        "use_case": "First-year programming courses with large classes",
+        "example": "A 400-student class submits 'add two integers' and 'sum an array'. The agent compiles, runs and grades every file under the same rules file in minutes and returns the same grade on every re-run, so a regrade request can be answered by re-running the agent.",
+        "benefit": "Consistent grading at scale, and every point can be traced to a metric and to evidence."
+      },
+      {
+        "use_case": "Instant feedback with a concrete failing input",
+        "example": "A student who writes int a,b; printf(\"%d\", a+b) is told that '2147483647 1' should print 2147483648 but printed -2147483648, with a one-line explanation of signed overflow and a UBSan line number.",
+        "benefit": "The student can fix the bug before the deadline instead of learning about it from a lost mark."
+      },
+      {
+        "use_case": "Plagiarism and LLM-copy triage for instructors",
+        "example": "A renamed copy of a classmate's sum_array solution reaches similarity 1.0 against the 0.85 threshold and is flagged. The instructor reviews only flagged pairs instead of every submission.",
+        "benefit": "Manual checking is narrowed to suspicious cases; a flag is a request for review, never a verdict."
+      },
+      {
+        "use_case": "Hiring and coding-interview screens",
+        "example": "A company grades 500 take-home submissions for a small task. The agent ranks them by correctness, edge-case handling and memory safety and keeps a per-metric explanation for each decision.",
+        "benefit": "Fast first-round filtering in which every rejection can be justified metric by metric."
+      }
+    ],
+    "limitations": [
+      {
+        "limitation": "The reference solution defines 'correct'",
+        "example": "The assignment's sample output expects -2147483648 for 2147483647 + 1, but our reference prints the exact sum 2147483648. A student who follows the sample literally and wraps around is marked wrong on those cases, and so is any student whose reading of an ambiguous specification differs from the reference.",
+        "mitigation": "State every ambiguity in the specification (done for overflow), have a second person review the reference, and let the instructor re-weight or drop a disputed case."
+      },
+      {
+        "limitation": "Complexity from static loop depth is unreliable",
+        "example": "When valgrind is unavailable, a binary search is loop depth 1 and is reported as O(n) instead of O(log n), so a student is penalised against an O(log n) bound. Measured with callgrind, optimised code can also differ from what the source suggests.",
+        "mitigation": "Install valgrind so counts are measured; the report marks the static estimate as low confidence and the instructor should review any complexity penalty it produced."
+      },
+      {
+        "limitation": "Copy detection misses restructured or unseen sources",
+        "example": "A student rewrites a copied sum_array solution from a for loop into a while (n-- > 0) loop: similarity drops to 0.18 and nothing is flagged. A solution copied from a website that is not in corpus/online is also never flagged, and the originality metric stays 1.0.",
+        "mitigation": "Grow the corpus (peers, several LLM-generated solutions per problem, collected web solutions), keep the flag as a prompt for human review, and pair it with an oral check for borderline cases."
+      },
+      {
+        "limitation": "Readability depends on the machine's local LLM",
+        "example": "Without Ollama the readability metric uses only the deterministic features (comment ratio, name length, line length), so the same file can receive a different readability score on a laptop with Ollama and on one without. Short but clear code with few comments is also under-rated by these features.",
+        "mitigation": "Set backend to 'none' in the rules for fully machine-independent grades, or pin the model and cache the responses; the report records which backend produced each score."
+      }
+    ]
+  }
+}

@@ -1,0 +1,375 @@
+{
+  "submission": "lis_llm_copy.c",
+  "submission_hash": "sha256:77cfdd9ce1f7be6cb24ec027808a6325445c24f4c9203e45bfc1db5eedcd1bea",
+  "rules_hash": "sha256:a081c478f7154e255139b757941d88d29f60ed5fc2aa245fa9a184f1c4a7569b",
+  "problem": "lis",
+  "grade": 93.16,
+  "partial": false,
+  "first_pass": {
+    "compiled": true,
+    "compile_warnings": 1,
+    "compile_errors": [],
+    "smoke_ok": true,
+    "smoke_outcome": "OK",
+    "suspected_infinite_loop": false,
+    "static_sanity": {
+      "has_main": true,
+      "has_reader": true,
+      "has_writer": true,
+      "main_returns": true,
+      "ok": true
+    },
+    "notes": [],
+    "parser": "tree-sitter",
+    "isolation": {
+      "private_empty_cwd": true,
+      "privilege_drop": false
+    }
+  },
+  "metrics": [
+    {
+      "name": "correctness",
+      "analyzer": "io_tests",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.25,
+      "contribution": 25.0,
+      "evidence": {
+        "tests_passed": 10,
+        "tests_total": 10,
+        "failing_tests": [],
+        "failing": []
+      },
+      "feedback": "10/10 tests pass",
+      "suggestions": []
+    },
+    {
+      "name": "syntax",
+      "analyzer": "compiler_warnings",
+      "status": "ok",
+      "score": 0.9,
+      "weight": 0.05,
+      "contribution": 4.5,
+      "evidence": {
+        "compiled": true,
+        "flags": "-Wall -Wextra -std=c11 -O2",
+        "werror_removed": false,
+        "added_O2": true,
+        "warnings": 1,
+        "by_flag": {
+          "unused-result": 1
+        },
+        "first_warnings": [
+          "lis_llm_copy.c:39:9: warning: ignoring return value of 'scanf' declared with attribute 'warn_unused_result' [-Wunused-result]"
+        ]
+      },
+      "feedback": "-Wunused-result x1",
+      "suggestions": [
+        "Check the return value of scanf/fread (it reports whether input was read)."
+      ]
+    },
+    {
+      "name": "structure",
+      "analyzer": "static_analysis",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "evidence": {
+        "measured_with": "lizard",
+        "functions": [
+          {
+            "name": "find_slot",
+            "cyclomatic": 3,
+            "length": 12
+          },
+          {
+            "name": "longest_run",
+            "cyclomatic": 4,
+            "length": 13
+          },
+          {
+            "name": "main",
+            "cyclomatic": 5,
+            "length": 13
+          }
+        ],
+        "limits": {
+          "max_cyclomatic": 8,
+          "max_function_length": 40
+        },
+        "cppcheck": []
+      },
+      "feedback": "3 function(s), max cyclomatic 5, 0 cppcheck finding(s)",
+      "suggestions": []
+    },
+    {
+      "name": "modularity",
+      "analyzer": "function_split",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.05,
+      "contribution": 5.0,
+      "evidence": {
+        "functions_defined": 3,
+        "function_names": [
+          "find_slot",
+          "longest_run",
+          "main"
+        ],
+        "helpers_defined": 2,
+        "helpers_called": [
+          "find_slot",
+          "longest_run"
+        ],
+        "expected_helpers": 1
+      },
+      "feedback": "2 helper(s) used: find_slot, longest_run",
+      "suggestions": []
+    },
+    {
+      "name": "logical",
+      "analyzer": "edge_case_runner",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.2,
+      "contribution": 20.0,
+      "evidence": {
+        "cases_passed": 33,
+        "cases_total": 33,
+        "groups": {
+          "empty": {
+            "passed": 1,
+            "total": 1
+          },
+          "single": {
+            "passed": 2,
+            "total": 2
+          },
+          "all_equal": {
+            "passed": 1,
+            "total": 1
+          },
+          "decreasing": {
+            "passed": 1,
+            "total": 1
+          },
+          "increasing": {
+            "passed": 1,
+            "total": 1
+          },
+          "duplicates": {
+            "passed": 2,
+            "total": 2
+          },
+          "not_contiguous": {
+            "passed": 2,
+            "total": 2
+          },
+          "extremes": {
+            "passed": 1,
+            "total": 1
+          },
+          "whitespace": {
+            "passed": 1,
+            "total": 1
+          },
+          "crlf": {
+            "passed": 1,
+            "total": 1
+          },
+          "random": {
+            "passed": 20,
+            "total": 20
+          }
+        },
+        "invalid_cases": 0,
+        "counter_tests_found": 0,
+        "failing": [],
+        "random_seed": 991160910
+      },
+      "feedback": "33/33 edge cases handled",
+      "suggestions": []
+    },
+    {
+      "name": "complexity",
+      "analyzer": "complexity_estimator",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.15,
+      "contribution": 15.0,
+      "evidence": {
+        "required": "O(n^2)",
+        "sizes": [
+          250,
+          500,
+          1000,
+          2000
+        ],
+        "generator": "array",
+        "instructions": [
+          322222,
+          520403,
+          925003,
+          1735146
+        ],
+        "growth": 4.3849,
+        "exponent": 1.01,
+        "r_squared": 1.0,
+        "method": "callgrind",
+        "estimated": "O(n)"
+      },
+      "feedback": "Estimated O(n) (callgrind); required O(n^2)",
+      "suggestions": []
+    },
+    {
+      "name": "memory_safety",
+      "analyzer": "sanitizer_run",
+      "status": "ok",
+      "score": 1.0,
+      "weight": 0.1,
+      "contribution": 10.0,
+      "evidence": {
+        "tests_run": 10,
+        "findings": [],
+        "failing": []
+      },
+      "feedback": "ASan/UBSan clean",
+      "suggestions": []
+    },
+    {
+      "name": "readability",
+      "analyzer": "llm_review",
+      "status": "ok",
+      "score": 0.7325,
+      "weight": 0.05,
+      "contribution": 3.66,
+      "evidence": {
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0,
+        "seed": 42,
+        "llm_share": 0.4,
+        "features": {
+          "comments": 0.219,
+          "names": 0.867,
+          "layout": 1.0,
+          "indentation": 1.0,
+          "spacing": 1.0,
+          "comment_ratio": 0.026,
+          "short_names": [
+            "hi",
+            "lo"
+          ],
+          "cramped_lines": 0,
+          "code_lines": 38
+        },
+        "deterministic_score": 0.7325,
+        "llm": {
+          "used": false,
+          "reason": "Ollama not reachable (URLError)"
+        }
+      },
+      "feedback": "Readability 7/10: short names (hi, lo)",
+      "suggestions": [
+        "Use descriptive names instead of hi, lo (for example lhs, rhs, total)."
+      ]
+    },
+    {
+      "name": "originality",
+      "analyzer": "similarity_flag",
+      "status": "ok",
+      "score": 0.0,
+      "weight": 0.05,
+      "contribution": 0.0,
+      "evidence": {
+        "tokens": 279,
+        "corpus_problem": "lis",
+        "corpus_size": 3,
+        "peers_compared": 0,
+        "max_similarity": 1.0,
+        "closest": "llm/lis/claude_2.c",
+        "threshold": 0.85,
+        "top_matches": [
+          {
+            "file": "llm/lis/claude_2.c",
+            "similarity": 1.0,
+            "kind": "llm_copy"
+          },
+          {
+            "file": "llm/lis/claude_3.c",
+            "similarity": 0.22,
+            "kind": "llm_copy"
+          },
+          {
+            "file": "llm/lis/claude_1.c",
+            "similarity": 0.143,
+            "kind": "llm_copy"
+          }
+        ]
+      },
+      "feedback": "max similarity 1.00 with llm/lis/claude_2.c - FLAGGED for review",
+      "suggestions": [
+        "Make sure the code is your own work; be ready to explain it."
+      ]
+    }
+  ],
+  "flags": [
+    {
+      "kind": "llm_copy",
+      "detail": "1.00 similarity with llm/lis/claude_2.c (threshold 0.85); needs human review"
+    }
+  ],
+  "tool_versions": {
+    "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cppcheck": "Cppcheck 2.13.0",
+    "lizard": "1.25.0",
+    "valgrind": "valgrind-3.22.0",
+    "python": "3.13.18"
+  },
+  "usefulness_limitations": {
+    "usefulness": [
+      {
+        "use_case": "First-year programming courses with large classes",
+        "example": "A 400-student class submits 'add two integers' and 'sum an array'. The agent compiles, runs and grades every file under the same rules file in minutes and returns the same grade on every re-run, so a regrade request can be answered by re-running the agent.",
+        "benefit": "Consistent grading at scale, and every point can be traced to a metric and to evidence."
+      },
+      {
+        "use_case": "Instant feedback with a concrete failing input",
+        "example": "A student who writes int a,b; printf(\"%d\", a+b) is told that '2147483647 1' should print 2147483648 but printed -2147483648, with a one-line explanation of signed overflow and a UBSan line number.",
+        "benefit": "The student can fix the bug before the deadline instead of learning about it from a lost mark."
+      },
+      {
+        "use_case": "Plagiarism and LLM-copy triage for instructors",
+        "example": "A renamed copy of a classmate's sum_array solution reaches similarity 1.0 against the 0.85 threshold and is flagged. The instructor reviews only flagged pairs instead of every submission.",
+        "benefit": "Manual checking is narrowed to suspicious cases; a flag is a request for review, never a verdict."
+      },
+      {
+        "use_case": "Hiring and coding-interview screens",
+        "example": "A company grades 500 take-home submissions for a small task. The agent ranks them by correctness, edge-case handling and memory safety and keeps a per-metric explanation for each decision.",
+        "benefit": "Fast first-round filtering in which every rejection can be justified metric by metric."
+      }
+    ],
+    "limitations": [
+      {
+        "limitation": "The reference solution defines 'correct'",
+        "example": "The assignment's sample output expects -2147483648 for 2147483647 + 1, but our reference prints the exact sum 2147483648. A student who follows the sample literally and wraps around is marked wrong on those cases, and so is any student whose reading of an ambiguous specification differs from the reference.",
+        "mitigation": "State every ambiguity in the specification (done for overflow), have a second person review the reference, and let the instructor re-weight or drop a disputed case."
+      },
+      {
+        "limitation": "Complexity from static loop depth is unreliable",
+        "example": "When valgrind is unavailable, a binary search is loop depth 1 and is reported as O(n) instead of O(log n), so a student is penalised against an O(log n) bound. Measured with callgrind, optimised code can also differ from what the source suggests.",
+        "mitigation": "Install valgrind so counts are measured; the report marks the static estimate as low confidence and the instructor should review any complexity penalty it produced."
+      },
+      {
+        "limitation": "Copy detection misses restructured or unseen sources",
+        "example": "A student rewrites a copied sum_array solution from a for loop into a while (n-- > 0) loop: similarity drops to 0.18 and nothing is flagged. A solution copied from a website that is not in corpus/online is also never flagged, and the originality metric stays 1.0.",
+        "mitigation": "Grow the corpus (peers, several LLM-generated solutions per problem, collected web solutions), keep the flag as a prompt for human review, and pair it with an oral check for borderline cases."
+      },
+      {
+        "limitation": "Readability depends on the machine's local LLM",
+        "example": "Without Ollama the readability metric uses only the deterministic features (comment ratio, name length, line length), so the same file can receive a different readability score on a laptop with Ollama and on one without. Short but clear code with few comments is also under-rated by these features.",
+        "mitigation": "Set backend to 'none' in the rules for fully machine-independent grades, or pin the model and cache the responses; the report records which backend produced each score."
+      }
+    ]
+  }
+}

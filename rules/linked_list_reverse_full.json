@@ -1,0 +1,102 @@
+{
+  "problem": "linked_list_reverse",
+  "description": "Linked list: print the list in reverse, EMPTY for n = 0; O(n) required.",
+  "time_limit_s": 2,
+  "memory_limit_mb": 128,
+  "skipped_policy": "zero",
+  "smoke_input": "5\n1 2 3 4 5\n",
+  "metrics": [
+    {
+      "name": "correctness",
+      "analyzer": "io_tests",
+      "weight": 0.27,
+      "params": {
+        "testset_dir": "problems/linked_list_reverse/tests",
+        "compare": "tokens"
+      }
+    },
+    {
+      "name": "syntax",
+      "analyzer": "compiler_warnings",
+      "weight": 0.08,
+      "params": {
+        "flags": "-Wall -Wextra -std=c11",
+        "penalty_per_warning": 0.1
+      }
+    },
+    {
+      "name": "structure",
+      "analyzer": "static_analysis",
+      "weight": 0.08,
+      "params": {
+        "max_cyclomatic": 8,
+        "max_function_length": 80
+      }
+    },
+    {
+      "name": "modularity",
+      "analyzer": "function_split",
+      "weight": 0.08,
+      "params": {
+        "expect_helpers": false,
+        "min_functions": 1
+      }
+    },
+    {
+      "name": "logical",
+      "analyzer": "edge_case_runner",
+      "weight": 0.15,
+      "params": {
+        "reference": "problems/linked_list_reverse/reference.c",
+        "edge_cases_file": "problems/linked_list_reverse/edge_cases.json"
+      }
+    },
+    {
+      "name": "complexity",
+      "analyzer": "complexity_estimator",
+      "weight": 0.08,
+      "params": {
+        "required": "O(n)",
+        "generator": "array",
+        "sizes": [
+          25,
+          50,
+          75,
+          100
+        ]
+      }
+    },
+    {
+      "name": "memory_safety",
+      "analyzer": "sanitizer_run",
+      "weight": 0.1,
+      "params": {
+        "testset_dir": "problems/linked_list_reverse/tests",
+        "flags": "-fsanitize=address,undefined -g -O0"
+      }
+    },
+    {
+      "name": "readability",
+      "analyzer": "llm_review",
+      "weight": 0.08,
+      "params": {
+        "backend": "ollama",
+        "model": "qwen2.5-coder:7b",
+        "temperature": 0,
+        "seed": 42,
+        "cache_dir": ".cache/llm",
+        "llm_share": 0.4
+      }
+    },
+    {
+      "name": "originality",
+      "analyzer": "similarity_flag",
+      "weight": 0.08,
+      "params": {
+        "corpus_dir": "corpus/",
+        "flag_threshold": 0.85,
+        "min_tokens": 25
+      }
+    }
+  ]
+}

@@ -33,13 +33,28 @@ def test_usefulness_limitations_complete():
         assert {"limitation", "example", "mitigation"} <= set(l) and len(l["example"]) > 60
 
 
-@pytest.mark.parametrize("prob,rules", [("add", "add_full"), ("sum_array", "sum_array_full")])
-def test_rules_validate_and_weights_sum(prob, rules):
-    r = load_rules(ROOT / f"rules/{rules}.json")
-    assert abs(sum(m.weight for m in r.metrics) - 1.0) < 1e-9 and len(r.metrics) == 9
+PROBLEMS = ["add", "sum_array", "climb_stairs", "knapsack", "lis", "hanoi", "nqueens",
+            "permutations", "reverse_list", "balanced_brackets", "count_occurrences", "longest_run",
+            "linked_list_reverse", "graph_components", "stairs_dp"]
 
 
-@pytest.mark.parametrize("prob", ["add", "sum_array"])
+@pytest.mark.parametrize("prob", PROBLEMS)
+def test_rules_validate_and_weights_sum(prob):
+    r = load_rules(ROOT / f"rules/{prob}_full.json")
+    names = {m.name for m in r.metrics}
+    assert abs(sum(m.weight for m in r.metrics) - 1.0) < 1e-9
+    assert len(r.metrics) == (9 if "complexity" in names else 8)
+
+
+@pytest.mark.parametrize("prob", PROBLEMS)
+def test_problem_package_is_complete(prob):
+    folder = ROOT / "problems" / prob
+    assert (folder / "spec.md").exists() and (folder / "reference.c").exists()
+    assert (folder / "edge_cases.json").exists() and len(discover_tests(folder / "tests")) >= 8
+    assert len(list((ROOT / "samples").glob(f"{prob}_*.c"))) >= 3
+
+
+@pytest.mark.parametrize("prob", PROBLEMS)
 def test_reference_passes_its_own_tests(prob, tmp_path):
     exe = tmp_path / "ref"
     subprocess.run(["gcc", "-O2", "-std=c11", str(ROOT / f"problems/{prob}/reference.c"), "-o", str(exe)], check=True)
@@ -209,3 +224,20 @@ def test_copy_flags_hidden_from_students():
     Flag.objects.create(run=run, kind="similarity", detail="SECRETDETAIL")
     assert b"SECRETDETAIL" not in c.get(f"/runs/{run.id}/").content
     assert b"SECRETDETAIL" in _client("teacher", "teacher123").get(f"/runs/{run.id}/").content
+
+
+def test_classmates_are_compared_but_not_the_students_own_work():
+    from django.contrib.auth.models import User
+    from grader.models import GradingRun
+    User.objects.create_user("student2", password="pw2")
+    code = (ROOT / "samples/add_good.c").read_text()
+    s1 = _client("student1", "student123")
+    s1.post("/problems/add/", {"file": _up("a.c", code)})
+    s1.post("/problems/add/", {"file": _up("a.c", code)})
+    first, second = GradingRun.objects.order_by("id")
+    assert not second.flags.filter(kind="similarity").exists()
+    _client("student2", "pw2").post("/problems/add/", {"file": _up("b.c", code)})
+    third = GradingRun.objects.order_by("id").last()
+    flag = third.flags.get(kind="similarity")
+    assert "peers/student1.c" in flag.detail
+

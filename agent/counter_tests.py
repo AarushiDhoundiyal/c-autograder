@@ -60,6 +60,10 @@ SIZE_GENERATORS = {
     "scalar": lambda n, rng: f"{n} {n}\n",
     "single_n": lambda n, rng: f"{n}\n",
     "array": lambda n, rng: f"{n}\n" + " ".join(str(rng.randint(0, 1000)) for _ in range(n)) + "\n",
+    "array_with_target": lambda n, rng: f"{n} {rng.randint(-5, 5)}\n" + " ".join(
+        str(rng.randint(-5, 5)) for _ in range(n)) + "\n",
+    "repeated_char": lambda n, rng: "a" * n + "\n",
+    "path_graph": lambda n, rng: f"{n} {n - 1}\n" + "".join(f"{v + 1} {v}\n" for v in range(1, n)),
 }
 
 

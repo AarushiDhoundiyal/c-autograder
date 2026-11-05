@@ -13,6 +13,8 @@ import shutil
 import tempfile
 from pathlib import Path
 
+from agent import sandbox
+
 
 def have(tool: str) -> bool:
     return shutil.which(tool) is not None
@@ -20,8 +22,15 @@ def have(tool: str) -> bool:
 
 def callgrind_instructions(sb, binary, stdin: str, workdir, timeout_s: float = 30):
     """Instructions executed by `binary` (int) or None if it could not be measured."""
+    count, outcome = callgrind_run(sb, binary, stdin, workdir, timeout_s)
+    return count if outcome == sandbox.OK else None
+
+
+def callgrind_run(sb, binary, stdin: str, workdir, timeout_s: float = 30):
+    """(instructions or None, sandbox outcome) for one run of `binary` under callgrind.
+    A run that crashed or timed out is reported with its outcome, so callers can tell the cases apart."""
     if not have("valgrind"):
-        return None
+        return None, None
     fd, out = tempfile.mkstemp(prefix="cg_", suffix=".out", dir=str(workdir))
     Path(out).unlink(missing_ok=True)
     try:
@@ -36,7 +45,7 @@ def callgrind_instructions(sb, binary, stdin: str, workdir, timeout_s: float = 3
         except OSError:
             pass
     m = re.search(r"Collected\s*:\s*(\d+)", r.stderr)
-    return int(m.group(1)) if m else None
+    return (int(m.group(1)) if m else None), r.outcome
 
 
 def memcheck_summary(sb, binary, stdin: str, workdir, timeout_s: float = 60):

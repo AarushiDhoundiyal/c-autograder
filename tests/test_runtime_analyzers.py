@@ -216,6 +216,31 @@ def test_complexity_small_sizes_fall_back_to_static(tmp_path):
     assert m["evidence"]["method"] == "static_loop_depth" and m["evidence"]["estimated"] == "O(n^2)"
 
 
+EXPONENTIAL = ('#include <stdio.h>\nlong long f(int n){return n<2?n:f(n-1)+f(n-2);}\n'
+               'int main(){int n;scanf("%d",&n);printf("%lld\\n",f(n));return 0;}\n')
+CRASH = '#include <stdio.h>\nint main(){int n;scanf("%d",&n);for(int i=0;i<n;i++){}int *p=0;*p=n;return 0;}\n'
+
+
+@pytest.mark.skipif(not HAVE_VALGRIND, reason="valgrind not installed")
+def test_complexity_program_that_does_not_finish_scores_zero(tmp_path):
+    src = tmp_path / "prog.c"
+    src.write_text(EXPONENTIAL)
+    rules = complexity_rules(tmp_path, required="O(n)", generator="single_n", sizes=[10, 20, 40],
+                             timeout_s=2)
+    m = metric(grade_submission(src, rules), "m")
+    assert m["score"] == 0.0 and m["evidence"]["estimated"] == "did not finish"
+    assert "did not finish" in m["evidence"]["note"]
+
+
+@pytest.mark.skipif(not HAVE_VALGRIND, reason="valgrind not installed")
+def test_complexity_crashed_run_is_not_counted(tmp_path):
+    src = tmp_path / "prog.c"
+    src.write_text(CRASH)
+    rules = complexity_rules(tmp_path, required="O(n)", generator="single_n", sizes=[1000, 2000, 4000])
+    m = metric(grade_submission(src, rules), "m")
+    assert m["evidence"]["method"] == "static_loop_depth" and "could not be measured" in m["evidence"]["note"]
+
+
 @pytest.mark.skipif(not HAVE_VALGRIND, reason="valgrind not installed")
 def test_profiling_helpers(tmp_path):
     from agent import sandbox
@@ -337,6 +362,37 @@ int main(void){ int n; if (scanf("%d", &n) != 1) { return 1; } printf("%d\\n", f
 def sim_rules(tmp_path, corpus, **extra):
     return one_metric(tmp_path, "similarity_flag", {"corpus_dir": str(corpus), "flag_threshold": 0.85,
                                                      "min_tokens": 30, **extra})
+
+
+def test_similarity_uses_only_the_corpus_of_its_own_problem(tmp_path):
+    corpus = tmp_path / "corpus"
+    (corpus / "llm" / "other_problem").mkdir(parents=True)
+    (corpus / "llm" / "other_problem" / "fact.c").write_text(BIG)
+    sub = tmp_path / "sub.c"
+    sub.write_text(BIG)
+    rep = grade_submission(sub, sim_rules(tmp_path, corpus))
+    assert metric(rep, "m")["evidence"]["corpus_size"] == 0 and not rep["flags"]
+    (corpus / "llm" / "add").mkdir()
+    (corpus / "llm" / "add" / "fact.c").write_text(BIG)
+    rep = grade_submission(sub, sim_rules(tmp_path, corpus))
+    m = metric(rep, "m")
+    assert m["evidence"]["closest"] == "llm/add/fact.c" and m["evidence"]["corpus_problem"] == "add"
+    assert any(f["kind"] == "llm_copy" for f in rep["flags"])
+
+
+def test_similarity_compares_with_classmates_but_not_itself(tmp_path):
+    peers = tmp_path / "submissions"
+    peers.mkdir()
+    (peers / "bob.c").write_text(BIG)
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    rep = grade_submission(peers / "bob.c", sim_rules(tmp_path, corpus), peers_dir=peers)
+    assert metric(rep, "m")["evidence"]["peers_compared"] == 0 and not rep["flags"]
+    (peers / "alice.c").write_text(BIG.replace("fact", "factorial").replace("r ", "result "))
+    rep = grade_submission(peers / "bob.c", sim_rules(tmp_path, corpus), peers_dir=peers)
+    m = metric(rep, "m")
+    assert m["evidence"]["peers_compared"] == 1 and m["evidence"]["closest"] == "peers/alice.c"
+    assert any(f["kind"] == "similarity" and "peers/alice.c" in f["detail"] for f in rep["flags"])
 
 
 def test_similarity_flags_renamed_copy_from_llm_corpus(tmp_path):

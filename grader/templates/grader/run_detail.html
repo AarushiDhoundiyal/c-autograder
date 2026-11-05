@@ -1,0 +1,38 @@
+{% extends "grader/base.html" %}
+{% block content %}
+<h3>Report #{{ run.id }} <small class="text-muted">{{ run.submission.problem.title }} · {{ run.submission.student.username }}</small></h3>
+{% if run.status == "queued" or run.status == "running" %}
+  <div class="alert alert-info" id="wait">Status: <b id="st">{{ run.status }}</b> — this page refreshes automatically…</div>
+  <script>
+  (function poll(){ fetch("{% url 'run_status' run.id %}").then(r=>r.json()).then(d=>{
+      document.getElementById("st").textContent=d.status;
+      if(d.status==="done"||d.status==="failed"){location.reload();} else {setTimeout(poll,1500);} }); })();
+  </script>
+{% elif run.status == "failed" %}
+  <div class="alert alert-danger"><b>Grading failed.</b> <pre class="mb-0">{{ run.error }}</pre></div>
+{% else %}
+  <div class="display-5 mb-2">{{ run.grade }} <small class="fs-5 text-muted">/ 100</small>
+    {% if run.partial %}<span class="badge bg-warning text-dark fs-6">PARTIAL</span>{% endif %}</div>
+  <table class="table table-sm align-middle">
+    <tr><th>Metric</th><th>Weight</th><th>Score</th><th>Points</th><th>Feedback</th></tr>
+    {% for m in metrics %}<tr><td>{{ m.name }}</td><td>{% widthratio m.weight 1 100 %}%</td>
+      <td>{% widthratio m.score 1 100 %}%{% if m.status != "ok" %} <span class="badge bg-secondary">{{ m.status }}</span>{% endif %}</td>
+      <td>{{ m.contribution }}</td><td>{{ m.feedback }}</td></tr>{% endfor %}
+  </table>
+  {% if run.failing_cases %}<h5>Where you failed</h5>
+  {% for c in run.failing_cases %}<div class="card mb-2"><div class="card-body">
+    <div class="row"><div class="col-md-4"><b>Input</b><pre class="case mb-0">{{ c.input }}</pre></div>
+    <div class="col-md-4"><b>Expected</b><pre class="case mb-0">{{ c.expected }}</pre></div>
+    <div class="col-md-4"><b>Got</b><pre class="case mb-0">{{ c.got }}</pre></div></div>
+    {% if c.why %}<p class="mt-2 mb-0"><b>Why:</b> {{ c.why }}</p>{% elif c.note %}<p class="mt-2 mb-0">{{ c.note }}</p>{% endif %}
+  </div></div>{% endfor %}{% endif %}
+  {% if run.suggestions %}<h5 class="mt-3">Suggestions to raise the grade</h5><ul>{% for s in run.suggestions %}<li>{{ s }}</li>{% endfor %}</ul>{% endif %}
+  {% if flags %}<h5 class="mt-3">Flags <small class="text-muted">(for review, not a verdict)</small></h5>
+  <ul>{% for f in flags %}<li><b>{{ f.kind }}</b>: {{ f.detail }}</li>{% endfor %}</ul>{% endif %}
+  <p class="text-muted small mt-4">rules {{ run.rules_hash|slice:":23" }}… · submission {{ run.submission_hash|slice:":23" }}…</p>
+  <a class="btn btn-outline-secondary btn-sm" href="{% url 'run_download' run.id 'txt' %}">Download .txt</a>
+  <a class="btn btn-outline-secondary btn-sm" href="{% url 'run_download' run.id 'json' %}">Download .json</a>
+  {% if user.is_staff %}<form method="post" action="{% url 'regrade' run.id %}" class="d-inline">{% csrf_token %}
+    <button class="btn btn-outline-primary btn-sm">Re-run (reproducibility check)</button></form>{% endif %}
+{% endif %}
+{% endblock %}

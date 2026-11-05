@@ -1,0 +1,8 @@
+{% extends "grader/base.html" %}
+{% block content %}
+<h3>My submissions</h3>
+<table class="table"><tr><th>Run</th><th>Problem</th><th>Time</th><th>Status</th><th>Grade</th></tr>
+{% for r in runs %}<tr><td><a href="{% url 'run_detail' r.id %}">#{{ r.id }}</a></td><td>{{ r.submission.problem.title }}</td>
+<td>{{ r.created_at|date:"Y-m-d H:i" }}</td><td>{{ r.status }}</td><td>{{ r.grade|default_if_none:"-" }}</td></tr>
+{% empty %}<tr><td colspan="5" class="text-muted">Nothing uploaded yet.</td></tr>{% endfor %}</table>
+{% endblock %}

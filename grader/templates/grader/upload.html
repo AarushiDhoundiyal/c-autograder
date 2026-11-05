@@ -1,0 +1,16 @@
+{% extends "grader/base.html" %}
+{% block content %}
+<h3>{{ problem.title }}</h3>
+<pre class="case">{{ problem.spec }}</pre>
+<form method="post" enctype="multipart/form-data" class="card card-body mb-4">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <label class="form-label">{{ form.file.label }}</label>
+  <input type="file" name="file" accept=".c" class="form-control mb-2">
+  {% for e in form.file.errors %}<div class="text-danger small mb-2">{{ e }}</div>{% endfor %}
+  <button class="btn btn-primary">Upload and grade</button>
+</form>
+<h5>Your earlier submissions</h5>
+<table class="table table-sm"><tr><th>Run</th><th>Time</th><th>Status</th><th>Grade</th></tr>
+{% for r in history %}<tr><td><a href="{% url 'run_detail' r.id %}">#{{ r.id }}</a></td><td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+<td>{{ r.status }}</td><td>{{ r.grade|default_if_none:"-" }}</td></tr>{% empty %}<tr><td colspan="4" class="text-muted">None yet.</td></tr>{% endfor %}</table>
+{% endblock %}

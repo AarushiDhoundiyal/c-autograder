@@ -1,0 +1,13 @@
+{% extends "grader/base.html" %}
+{% block content %}
+<h3>Rules — {{ problem.title }}</h3>
+<p class="text-muted">Weights must sum to 1.00. Saving creates a new version; old submissions keep their rules.</p>
+<form method="post">{% csrf_token %}
+  {% if form.json_text.errors %}<div class="alert alert-danger"><ul class="mb-0">{% for e in form.json_text.errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+  {{ form.json_text }}
+  <div class="my-2">{{ form.note }}</div>
+  <button class="btn btn-primary">Validate and save</button>
+</form>
+<h6 class="mt-4">Versions</h6>
+<ul class="small">{% for v in versions %}<li>{{ v.created_at|date:"Y-m-d H:i" }} · {{ v.rules_hash|slice:":23" }} · {{ v.created_by|default:"-" }} {{ v.note }}</li>{% endfor %}</ul>
+{% endblock %}

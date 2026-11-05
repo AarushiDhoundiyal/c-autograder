@@ -1,0 +1,13 @@
+{% extends "grader/base.html" %}
+{% block content %}
+<h3>Problems</h3>
+<div class="list-group">
+{% for p in problems %}
+  <div class="list-group-item d-flex justify-content-between align-items-center">
+    <a href="{% url 'problem_upload' p.slug %}" class="fw-semibold text-decoration-none">{{ p.title }}</a>
+    {% if user.is_staff %}<span><a class="btn btn-sm btn-outline-secondary" href="{% url 'dashboard' p.slug %}">Class results</a>
+      <a class="btn btn-sm btn-outline-secondary" href="{% url 'ruleset_edit' p.slug %}">Rules</a></span>{% endif %}
+  </div>
+{% empty %}<p class="text-muted">No problems yet. Run <code>python manage.py seed_demo</code> or add one in the admin.</p>{% endfor %}
+</div>
+{% endblock %}
